@@ -118,3 +118,70 @@ describe('POST /api/trips (stock update)', () => {
     expect(res.status).toBe(201);
   });
 });
+
+describe('POST /api/trips with store_name', () => {
+  it('saves store_name when provided', async () => {
+    await addCheckedItem('Sal', 5);
+    const res = await request(app).post('/api/trips')
+      .set(auth())
+      .send({ store_name: 'Atacadão' });
+    expect(res.status).toBe(201);
+    expect(res.body.store_name).toBe('Atacadão');
+  });
+
+  it('defaults store_name to empty string when not provided', async () => {
+    await addCheckedItem('Sal', 5);
+    const res = await request(app).post('/api/trips').set(auth());
+    expect(res.status).toBe(201);
+    expect(res.body.store_name).toBe('');
+  });
+});
+
+describe('PATCH /api/trips/:id', () => {
+  it('updates store_name', async () => {
+    await addCheckedItem('Sal', 5);
+    const { body: trip } = await request(app).post('/api/trips').set(auth());
+
+    const res = await request(app).patch(`/api/trips/${trip.id}`)
+      .set(auth())
+      .send({ store_name: 'BH' });
+    expect(res.status).toBe(200);
+    expect(res.body.store_name).toBe('BH');
+    expect(res.body.id).toBe(trip.id);
+  });
+
+  it('returns 404 for unknown id', async () => {
+    const res = await request(app).patch('/api/trips/nao-existe')
+      .set(auth())
+      .send({ store_name: 'X' });
+    expect(res.status).toBe(404);
+  });
+
+  it('returns 400 with no fields to update', async () => {
+    await addCheckedItem('Sal', 5);
+    const { body: trip } = await request(app).post('/api/trips').set(auth());
+    const res = await request(app).patch(`/api/trips/${trip.id}`)
+      .set(auth())
+      .send({});
+    expect(res.status).toBe(400);
+  });
+});
+
+describe('DELETE /api/trips/:id', () => {
+  it('deletes a trip and its items', async () => {
+    await addCheckedItem('Sal', 5);
+    const { body: trip } = await request(app).post('/api/trips').set(auth());
+
+    const res = await request(app).delete(`/api/trips/${trip.id}`).set(auth());
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ ok: true });
+
+    const list = await request(app).get('/api/trips').set(auth());
+    expect(list.body).toHaveLength(0);
+  });
+
+  it('returns 404 for unknown id', async () => {
+    const res = await request(app).delete('/api/trips/nao-existe').set(auth());
+    expect(res.status).toBe(404);
+  });
+});

@@ -193,16 +193,42 @@
           <button class="btn-outline" onclick="createNewList()">+ Nova lista manual</button>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-3 mb-4">
-        <div class="bg-white rounded-2xl p-4 shadow-sm text-center">
-          <p class="text-2xl font-bold text-red-600" id="stat-trips">—</p>
-          <p class="text-gray-500 text-xs mt-1">Idas ao mercado</p>
+      <!-- Seletor de mês -->
+      <div class="flex items-center justify-between bg-white rounded-2xl p-3 shadow-sm mb-3">
+        <button onclick="prevMonth()" class="w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="text-sm font-semibold text-gray-700 capitalize" id="analytics-month-label">—</span>
+        <button onclick="nextMonth()" id="btn-next-month" class="w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <!-- Cards de estatística -->
+      <div class="grid grid-cols-3 gap-2 mb-3">
+        <div class="rounded-2xl p-3 text-center" style="background:linear-gradient(135deg,#eff6ff,#dbeafe)">
+          <p class="text-xl font-bold text-blue-700" id="stat-trips">—</p>
+          <p class="text-blue-500 text-xs mt-0.5 leading-tight">Idas ao mercado</p>
         </div>
-        <div class="bg-white rounded-2xl p-4 shadow-sm text-center">
-          <p class="text-xl font-bold text-red-600" id="stat-total">—</p>
-          <p class="text-gray-500 text-xs mt-1">Total este mês</p>
+        <div class="rounded-2xl p-3 text-center" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7)">
+          <p class="text-base font-bold text-green-700 leading-tight" id="stat-total">—</p>
+          <p class="text-green-500 text-xs mt-0.5 leading-tight">Total gasto</p>
+        </div>
+        <div class="rounded-2xl p-3 text-center" style="background:linear-gradient(135deg,#fff7ed,#fed7aa)">
+          <p class="text-base font-bold text-orange-700 leading-tight" id="stat-avg">—</p>
+          <p class="text-orange-500 text-xs mt-0.5 leading-tight">Ticket médio</p>
         </div>
       </div>
+
+      <!-- Top produtos -->
+      <div id="home-top-products" class="hidden mb-3">
+        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Top produtos do mês</h3>
+        <div class="bg-white rounded-2xl p-4 shadow-sm">
+          <div id="home-top-list"></div>
+        </div>
+      </div>
+
+      <!-- Última compra -->
       <div id="home-recent" class="hidden">
         <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Última compra</h3>
         <div class="trip-card" id="home-recent-trip" onclick="navigateTo('history')"></div>
@@ -810,6 +836,7 @@ async function saveCredentials() {
 // ===== STATE =====
 let activeList  = [];
 let trips       = [];
+let analyticsMonth = new Date().toISOString().slice(0, 7);
 let priceItemId  = null;
 let deleteItemId = null;
 let currentView  = '';
@@ -855,6 +882,7 @@ async function loadHome() {
     trips      = await tripsRes.json();
     stockList  = await stockRes.json();
     renderHome();
+    loadAnalytics();
   } catch { showError('Erro ao carregar dados.'); } finally { hideLoading(); }
 }
 
@@ -883,20 +911,74 @@ function renderHome() {
     document.getElementById('home-partial-total').textContent = fmtBRL(partial);
   }
 
-  const now = new Date();
-  const monthTrips = trips.filter(t => {
-    const d = new Date(t.finished_at);
-    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-  });
-  document.getElementById('stat-trips').textContent = trips.length;
-  document.getElementById('stat-total').textContent = fmtBRL(monthTrips.reduce((s, t) => s + (t.grand_total || 0), 0));
-
   const recentEl = document.getElementById('home-recent');
   if (trips.length > 0) {
     recentEl.classList.remove('hidden');
     document.getElementById('home-recent-trip').innerHTML = tripCardHTML(trips[0]);
   } else {
     recentEl.classList.add('hidden');
+  }
+}
+
+function monthLabel(ym) {
+  const [y, m] = ym.split('-').map(Number);
+  return new Date(y, m - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+}
+
+function prevMonth() {
+  const [y, m] = analyticsMonth.split('-').map(Number);
+  const d = new Date(y, m - 2, 1);
+  analyticsMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  loadAnalytics();
+}
+
+function nextMonth() {
+  const nowYM = new Date().toISOString().slice(0, 7);
+  if (analyticsMonth >= nowYM) return;
+  const [y, m] = analyticsMonth.split('-').map(Number);
+  const d = new Date(y, m, 1);
+  analyticsMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  loadAnalytics();
+}
+
+async function loadAnalytics() {
+  document.getElementById('analytics-month-label').textContent = monthLabel(analyticsMonth);
+  const nowYM = new Date().toISOString().slice(0, 7);
+  const nextBtn = document.getElementById('btn-next-month');
+  if (nextBtn) nextBtn.disabled = analyticsMonth >= nowYM;
+
+  try {
+    const res = await authFetch(`/api/analytics?month=${analyticsMonth}`);
+    if (!res) return;
+    renderAnalytics(await res.json());
+  } catch { /* analytics falha silenciosamente */ }
+}
+
+function renderAnalytics(data) {
+  document.getElementById('stat-trips').textContent = data.month_trips;
+  document.getElementById('stat-total').textContent = fmtBRL(data.month_total);
+  document.getElementById('stat-avg').textContent   = data.month_trips > 0 ? fmtBRL(data.avg_ticket) : '—';
+
+  const topEl   = document.getElementById('home-top-products');
+  const topList = document.getElementById('home-top-list');
+  if (data.top_products && data.top_products.length > 0) {
+    topEl.classList.remove('hidden');
+    const maxTotal = data.top_products[0].total || 1;
+    topList.innerHTML = data.top_products.map(p => {
+      const pct = Math.round((p.total / maxTotal) * 100);
+      return `
+        <div class="mb-3 last:mb-0">
+          <div class="flex justify-between text-sm mb-1">
+            <span class="font-medium text-gray-700 truncate mr-2">${esc(p.name)}</span>
+            <span class="text-gray-500 whitespace-nowrap text-xs">${fmtBRL(p.total)}</span>
+          </div>
+          <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full bg-red-400 rounded-full" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+    }).join('');
+  } else {
+    topEl.classList.add('hidden');
   }
 }
 

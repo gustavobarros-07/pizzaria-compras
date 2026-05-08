@@ -92,9 +92,35 @@
       animation: spin 0.7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Category item borders */
+    .item-row.cat-carne      { border-left: 4px solid #f97316; }
+    .item-row.cat-laticinios { border-left: 4px solid #0ea5e9; }
+    .item-row.cat-doces      { border-left: 4px solid #ec4899; }
+    .item-row.cat-outros     { border-left: 4px solid #64748b; }
+
+    /* Category filter chips */
+    .cat-chip {
+      padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+      white-space: nowrap; border: 1.5px solid; cursor: pointer; flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    /* Avulsas purple button */
+    .btn-purple {
+      background: #7c3aed; color: white; border: none; border-radius: 12px;
+      padding: 14px 20px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%;
+    }
+    .btn-purple:active { background: #6d28d9; }
+
+    /* Purple nav active */
+    #nav-avulsas.active { color: #7c3aed; }
+
+    /* Disable scroll on bottom nav when there are 6 items */
+    .bottom-nav { overflow-x: auto; }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col max-w-md mx-auto relative">
+<body class="min-h-screen flex flex-col max-w-md mx-auto relative" style="background:#faf7f3">
 
   <!-- Loading -->
   <div id="loading-overlay" class="hidden">

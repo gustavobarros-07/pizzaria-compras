@@ -246,6 +246,22 @@
     </div>
   </div>
 
+  <!-- ===================== STOCK VIEW ===================== -->
+  <div id="view-stock" class="view flex-1 pb-24 overflow-y-auto">
+    <div class="bg-red-600 text-white px-5 pt-12 pb-5 sticky top-0 z-20">
+      <h2 class="text-2xl font-bold">Estoque</h2>
+      <p class="text-red-200 text-sm mt-1">Inventário da pizzaria</p>
+    </div>
+    <div class="px-4 pt-4">
+      <div id="stock-container"></div>
+      <div id="empty-stock" class="text-center py-12 hidden">
+        <div class="text-5xl mb-3">📦</div>
+        <p class="text-gray-400 text-sm">Toque no <strong>+</strong> para adicionar itens ao estoque</p>
+      </div>
+    </div>
+    <button class="fab" onclick="openAddStockModal()">+</button>
+  </div>
+
   <!-- ===================== SETTINGS VIEW ===================== -->
   <div id="view-settings" class="view flex-1 pb-20 overflow-y-auto">
     <div class="bg-red-600 text-white px-5 pt-12 pb-6">
@@ -291,6 +307,13 @@
         <circle cx="12" cy="12" r="10"/>
         <polyline points="12 6 12 12 16 14"/>
       </svg>Histórico
+    </button>
+    <button class="nav-btn" id="nav-stock" onclick="navigateTo('stock')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+        <line x1="12" y1="22.08" x2="12" y2="12"/>
+      </svg>Estoque
     </button>
     <button class="nav-btn" id="nav-settings" onclick="navigateTo('settings')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -386,6 +409,99 @@
         <button class="btn-outline" style="flex:1" onclick="closeModal('modal-delete')">Cancelar</button>
         <button class="btn-red" style="flex:2;background:#ef4444" onclick="deleteItem()">Remover</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Add Stock Item -->
+  <div id="modal-add-stock" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-bold">Adicionar ao Estoque</h3>
+        <button onclick="closeModal('modal-add-stock')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do produto</label>
+        <input type="text" id="stock-add-name" placeholder="Ex: Mozzarella" autocomplete="off" />
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Quantidade atual</label>
+          <input type="number" id="stock-add-qty" placeholder="0" min="0" step="0.01" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Unidade</label>
+          <select id="stock-add-unit">
+            <option value="un">unidade</option>
+            <option value="kg">kg</option>
+            <option value="g">g</option>
+            <option value="L">L</option>
+            <option value="ml">ml</option>
+            <option value="pct">pacote</option>
+            <option value="cx">caixa</option>
+            <option value="dz">dúzia</option>
+            <option value="fardo">fardo</option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Quantidade mínima (alerta)</label>
+        <input type="number" id="stock-add-min" placeholder="0" min="0" step="0.01" />
+      </div>
+      <button class="btn-red" onclick="saveNewStockItem()">Adicionar</button>
+    </div>
+  </div>
+
+  <!-- Edit/Adjust Stock Item -->
+  <div id="modal-stock-item" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <div class="flex items-center justify-between mb-1">
+        <h3 class="text-lg font-bold" id="stock-item-modal-title">—</h3>
+        <button onclick="closeModal('modal-stock-item')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
+      </div>
+      <p class="text-sm text-gray-400 mb-4" id="stock-item-modal-info">—</p>
+      <div class="bg-gray-50 rounded-xl p-4 mb-4">
+        <p class="text-xs font-semibold text-gray-400 mb-2 uppercase">Ajustar quantidade</p>
+        <div class="flex gap-3 mb-3">
+          <button id="stock-adj-entrada" onclick="setStockAdjType('entrada')"
+            class="flex-1 py-2 rounded-xl text-sm font-bold border-2 border-green-500 text-green-600 bg-green-50">
+            + Entrada
+          </button>
+          <button id="stock-adj-saida" onclick="setStockAdjType('saida')"
+            class="flex-1 py-2 rounded-xl text-sm font-bold border-2 border-gray-200 text-gray-400">
+            − Saída
+          </button>
+        </div>
+        <input type="number" id="stock-adj-value" placeholder="0" min="0" step="0.01" class="mb-3" />
+        <button class="btn-red" onclick="saveStockAdjustment()">Confirmar ajuste</button>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4 mb-4">
+        <p class="text-xs font-semibold text-gray-400 mb-2 uppercase">Editar item</p>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 mb-1">Unidade</label>
+            <select id="stock-edit-unit">
+              <option value="un">unidade</option>
+              <option value="kg">kg</option>
+              <option value="g">g</option>
+              <option value="L">L</option>
+              <option value="ml">ml</option>
+              <option value="pct">pacote</option>
+              <option value="cx">caixa</option>
+              <option value="dz">dúzia</option>
+              <option value="fardo">fardo</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 mb-1">Mínimo</label>
+            <input type="number" id="stock-edit-min" placeholder="0" min="0" step="0.01" />
+          </div>
+        </div>
+        <button class="btn-outline" style="font-size:14px;padding:10px" onclick="saveStockEdit()">Salvar edição</button>
+      </div>
+      <button onclick="deleteStockItem()"
+        class="w-full py-3 rounded-xl text-sm font-bold text-red-500 border-2 border-red-100">
+        Remover item do estoque
+      </button>
     </div>
   </div>
 
@@ -494,6 +610,7 @@ function navigateTo(view) {
   if (view === 'home')    loadHome();
   if (view === 'list')    loadList();
   if (view === 'history') loadHistory();
+  if (view === 'stock')   loadStock();
 }
 
 // ===== LOADING =====
@@ -816,6 +933,151 @@ document.getElementById('price-input').addEventListener('keydown', e => {
 document.getElementById('login-password').addEventListener('keydown', e => {
   if (e.key === 'Enter') doLogin();
 });
+
+// ===== STOCK =====
+let stockList = [];
+let stockItemId = null;
+let stockAdjType = 'entrada';
+
+async function loadStock() {
+  showLoading();
+  try {
+    const res = await authFetch('/api/stock');
+    if (!res) return;
+    stockList = await res.json();
+    renderStock();
+  } catch { showError('Erro ao carregar estoque.'); } finally { hideLoading(); }
+}
+
+function renderStock() {
+  const emptyEl = document.getElementById('empty-stock');
+  emptyEl.classList.toggle('hidden', stockList.length > 0);
+  document.getElementById('stock-container').innerHTML = stockList.map(s => {
+    const low = s.qty < s.min_qty;
+    return `
+      <div class="item-row ${low ? 'border-l-4 border-orange-400' : ''}" onclick="openStockItemModal('${s.id}')">
+        <div class="flex items-center gap-3">
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-800 truncate">${esc(s.name)}</p>
+            <p class="text-xs text-gray-400">${s.qty} ${s.unit} ${low ? '· <span class="text-orange-500 font-medium">abaixo do mínimo ('+s.min_qty+')</span>' : ''}</p>
+          </div>
+          ${low ? '<span class="text-orange-400 text-lg">⚠️</span>' : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openAddStockModal() {
+  document.getElementById('stock-add-name').value = '';
+  document.getElementById('stock-add-qty').value  = '0';
+  document.getElementById('stock-add-unit').value = 'un';
+  document.getElementById('stock-add-min').value  = '0';
+  openModal('modal-add-stock');
+  setTimeout(() => document.getElementById('stock-add-name').focus(), 300);
+}
+
+async function saveNewStockItem() {
+  const name    = document.getElementById('stock-add-name').value.trim();
+  const qty     = parseFloat(document.getElementById('stock-add-qty').value)  || 0;
+  const unit    = document.getElementById('stock-add-unit').value;
+  const min_qty = parseFloat(document.getElementById('stock-add-min').value)  || 0;
+  if (!name) { document.getElementById('stock-add-name').focus(); return; }
+
+  closeModal('modal-add-stock');
+  showLoading();
+  try {
+    const res = await authFetch('/api/stock', {
+      method: 'POST',
+      body: JSON.stringify({ name, qty, unit, min_qty })
+    });
+    if (!res) return;
+    const item = await res.json();
+    stockList.push(item);
+    stockList.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+    renderStock();
+  } catch { showError('Erro ao adicionar item.'); } finally { hideLoading(); }
+}
+
+function openStockItemModal(id) {
+  const item = stockList.find(s => s.id === id);
+  if (!item) return;
+  stockItemId = id;
+  stockAdjType = 'entrada';
+  document.getElementById('stock-item-modal-title').textContent = item.name;
+  document.getElementById('stock-item-modal-info').textContent  =
+    `Estoque atual: ${item.qty} ${item.unit} · Mínimo: ${item.min_qty}`;
+  document.getElementById('stock-adj-value').value  = '';
+  document.getElementById('stock-edit-unit').value  = item.unit;
+  document.getElementById('stock-edit-min').value   = item.min_qty;
+  setStockAdjType('entrada');
+  openModal('modal-stock-item');
+}
+
+function setStockAdjType(type) {
+  stockAdjType = type;
+  document.getElementById('stock-adj-entrada').className =
+    type === 'entrada'
+      ? 'flex-1 py-2 rounded-xl text-sm font-bold border-2 border-green-500 text-green-600 bg-green-50'
+      : 'flex-1 py-2 rounded-xl text-sm font-bold border-2 border-gray-200 text-gray-400';
+  document.getElementById('stock-adj-saida').className =
+    type === 'saida'
+      ? 'flex-1 py-2 rounded-xl text-sm font-bold border-2 border-red-400 text-red-500 bg-red-50'
+      : 'flex-1 py-2 rounded-xl text-sm font-bold border-2 border-gray-200 text-gray-400';
+}
+
+async function saveStockAdjustment() {
+  const delta = parseFloat(document.getElementById('stock-adj-value').value);
+  if (isNaN(delta) || delta <= 0) { document.getElementById('stock-adj-value').focus(); return; }
+
+  const item = stockList.find(s => s.id === stockItemId);
+  const newQty = stockAdjType === 'entrada'
+    ? item.qty + delta
+    : Math.max(0, item.qty - delta);
+
+  closeModal('modal-stock-item');
+  showLoading();
+  try {
+    const res = await authFetch(`/api/stock/${stockItemId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ qty: newQty })
+    });
+    if (!res) return;
+    const updated = await res.json();
+    const idx = stockList.findIndex(s => s.id === stockItemId);
+    if (idx !== -1) stockList[idx] = updated;
+    renderStock();
+  } catch { showError('Erro ao ajustar estoque.'); } finally { hideLoading(); }
+}
+
+async function saveStockEdit() {
+  const unit    = document.getElementById('stock-edit-unit').value;
+  const min_qty = parseFloat(document.getElementById('stock-edit-min').value) || 0;
+
+  closeModal('modal-stock-item');
+  showLoading();
+  try {
+    const res = await authFetch(`/api/stock/${stockItemId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ unit, min_qty })
+    });
+    if (!res) return;
+    const updated = await res.json();
+    const idx = stockList.findIndex(s => s.id === stockItemId);
+    if (idx !== -1) stockList[idx] = updated;
+    renderStock();
+  } catch { showError('Erro ao editar item.'); } finally { hideLoading(); }
+}
+
+async function deleteStockItem() {
+  closeModal('modal-stock-item');
+  showLoading();
+  try {
+    const res = await authFetch(`/api/stock/${stockItemId}`, { method: 'DELETE' });
+    if (!res) return;
+    stockList = stockList.filter(s => s.id !== stockItemId);
+    renderStock();
+  } catch { showError('Erro ao remover item.'); } finally { hideLoading(); }
+}
 
 // ===== UTILS =====
 function fmtBRL(val) {

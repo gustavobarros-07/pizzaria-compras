@@ -126,3 +126,30 @@ describe('DELETE /api/stock/:id', () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe('POST /api/stock with category', () => {
+  it('saves category when provided', async () => {
+    const res = await request(app).post('/api/stock').set(auth())
+      .send({ name: 'Queijo', qty: 5, unit: 'kg', min_qty: 1, category: 'laticinios' });
+    expect(res.status).toBe(201);
+    expect(res.body.category).toBe('laticinios');
+  });
+
+  it('defaults category to empty string', async () => {
+    const res = await request(app).post('/api/stock').set(auth())
+      .send({ name: 'Sal', qty: 1, unit: 'kg', min_qty: 0 });
+    expect(res.status).toBe(201);
+    expect(res.body.category).toBe('');
+  });
+});
+
+describe('PATCH /api/stock/:id with category', () => {
+  it('updates category', async () => {
+    const { body: item } = await request(app).post('/api/stock').set(auth())
+      .send({ name: 'Carne', qty: 2, unit: 'kg', min_qty: 1 });
+    const res = await request(app).patch(`/api/stock/${item.id}`).set(auth())
+      .send({ category: 'carne' });
+    expect(res.status).toBe(200);
+    expect(res.body.category).toBe('carne');
+  });
+});

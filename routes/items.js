@@ -24,12 +24,20 @@ router.post('/', (req, res) => {
 });
 
 router.patch('/:id', (req, res) => {
-  const item = db.prepare('SELECT id FROM list_items WHERE id = ?').get(req.params.id);
+  const item = db.prepare('SELECT * FROM list_items WHERE id = ?').get(req.params.id);
   if (!item) return res.status(404).json({ error: 'Item não encontrado' });
 
-  const { checked, total_paid } = req.body;
-  db.prepare('UPDATE list_items SET checked = ?, total_paid = ? WHERE id = ?')
-    .run(checked ? 1 : 0, total_paid ?? null, req.params.id);
+  const updates = {};
+  if (req.body.checked !== undefined) updates.checked = req.body.checked ? 1 : 0;
+  if (req.body.total_paid !== undefined) updates.total_paid = req.body.total_paid;
+
+  if (Object.keys(updates).length === 0) {
+    return res.status(400).json({ error: 'Nenhum campo para atualizar' });
+  }
+
+  const setClauses = Object.keys(updates).map(k => `${k} = ?`).join(', ');
+  const values = [...Object.values(updates), req.params.id];
+  db.prepare(`UPDATE list_items SET ${setClauses} WHERE id = ?`).run(...values);
 
   const updated = db.prepare('SELECT * FROM list_items WHERE id = ?').get(req.params.id);
   res.json({ ...updated, checked: !!updated.checked });

@@ -476,14 +476,18 @@
   <!-- Finish Trip -->
   <div id="modal-finish" class="modal-overlay hidden">
     <div class="modal-sheet">
-      <div class="text-center mb-5">
-        <div class="text-5xl mb-3">🎉</div>
+      <div class="text-center mb-4">
+        <div class="text-4xl mb-2">🎉</div>
         <h3 class="text-xl font-bold text-gray-800 mb-1">Finalizar compra?</h3>
         <p class="text-gray-400 text-sm" id="finish-summary">—</p>
       </div>
-      <div class="bg-gray-50 rounded-xl p-4 mb-5 text-center">
+      <div class="bg-gray-50 rounded-xl p-4 mb-4 text-center">
         <p class="text-gray-400 text-sm">Total da compra</p>
         <p class="text-3xl font-bold text-red-600" id="finish-total">R$ 0,00</p>
+      </div>
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do mercado</label>
+        <input type="text" id="finish-store" placeholder="Ex: Atacadão, Assaí, BH..." autocomplete="off" />
       </div>
       <div class="flex gap-3">
         <button class="btn-outline" style="flex:1" onclick="closeModal('modal-finish')">Voltar</button>
@@ -1019,13 +1023,19 @@ function openFinishModal() {
   document.getElementById('finish-summary').textContent =
     `${checked} de ${n} ite${n > 1 ? 'ns' : 'm'} marcado${checked !== 1 ? 's' : ''}`;
   document.getElementById('finish-total').textContent = fmtBRL(total);
+  document.getElementById('finish-store').value = '';
   openModal('modal-finish');
+  setTimeout(() => document.getElementById('finish-store').focus(), 300);
 }
 
 async function finishTrip() {
+  const store_name = document.getElementById('finish-store').value.trim();
   document.getElementById('btn-confirm-finish').disabled = true;
   try {
-    const res = await authFetch('/api/trips', { method: 'POST' });
+    const res = await authFetch('/api/trips', {
+      method: 'POST',
+      body: JSON.stringify({ store_name })
+    });
     if (!res) return;
     if (!res.ok) { showError('Nenhum item marcado para finalizar.'); return; }
     activeList = [];
@@ -1274,12 +1284,19 @@ async function confirmTemplateSelect() {
   const selected = templateList.filter(i => templateChecked.has(i.id));
   if (selected.length === 0) return;
 
+  if (stockList.length === 0) {
+    const res = await authFetch('/api/stock');
+    if (res) stockList = await res.json();
+  }
+
   showLoading();
   try {
     for (const item of selected) {
+      const match = stockList.find(s => s.name.toLowerCase() === item.name.toLowerCase());
+      const unit  = match ? match.unit : item.unit;
       await authFetch('/api/items', {
         method: 'POST',
-        body: JSON.stringify({ name: item.name, qty: item.qty, unit: item.unit })
+        body: JSON.stringify({ name: item.name, qty: item.qty, unit })
       });
     }
     navigateTo('list');

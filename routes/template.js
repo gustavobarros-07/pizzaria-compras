@@ -7,25 +7,20 @@ const router = express.Router();
 router.use(requireAuth);
 
 router.get('/', (req, res) => {
-  const items = db.prepare('SELECT * FROM template_items ORDER BY sort_order').all();
-  res.json(items);
+  res.json(db.prepare('SELECT * FROM template_items ORDER BY sort_order').all());
 });
 
 router.post('/', (req, res) => {
-  const { name, qty, unit } = req.body;
+  const { name, qty, unit, category = '' } = req.body;
   if (!name) return res.status(400).json({ error: 'Nome obrigatório' });
 
   const id = randomUUID();
-  const maxOrder = db.prepare(
-    'SELECT COALESCE(MAX(sort_order), -1) AS m FROM template_items'
-  ).get().m;
-
+  const maxOrder = db.prepare('SELECT COALESCE(MAX(sort_order), -1) AS m FROM template_items').get().m;
   db.prepare(
-    'INSERT INTO template_items (id, name, qty, unit, sort_order) VALUES (?, ?, ?, ?, ?)'
-  ).run(id, name, qty || 1, unit || 'un', maxOrder + 1);
+    'INSERT INTO template_items (id, name, qty, unit, category, sort_order) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(id, name, qty || 1, unit || 'un', category, maxOrder + 1);
 
-  const item = db.prepare('SELECT * FROM template_items WHERE id = ?').get(id);
-  res.status(201).json(item);
+  res.status(201).json(db.prepare('SELECT * FROM template_items WHERE id = ?').get(id));
 });
 
 router.patch('/:id', (req, res) => {
@@ -33,13 +28,12 @@ router.patch('/:id', (req, res) => {
   if (!item) return res.status(404).json({ error: 'Item não encontrado' });
 
   const updates = {};
-  if (req.body.name !== undefined) updates.name = req.body.name;
-  if (req.body.qty  !== undefined) updates.qty  = req.body.qty;
-  if (req.body.unit !== undefined) updates.unit = req.body.unit;
+  if (req.body.name     !== undefined) updates.name     = req.body.name;
+  if (req.body.qty      !== undefined) updates.qty      = req.body.qty;
+  if (req.body.unit     !== undefined) updates.unit     = req.body.unit;
+  if (req.body.category !== undefined) updates.category = req.body.category;
 
-  if (Object.keys(updates).length === 0) {
-    return res.status(400).json({ error: 'Nenhum campo para atualizar' });
-  }
+  if (Object.keys(updates).length === 0) return res.status(400).json({ error: 'Nenhum campo para atualizar' });
 
   const setClauses = Object.keys(updates).map(k => `${k} = ?`).join(', ');
   db.prepare(`UPDATE template_items SET ${setClauses} WHERE id = ?`)

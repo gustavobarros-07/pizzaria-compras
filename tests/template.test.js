@@ -110,3 +110,30 @@ describe('DELETE /api/template/:id', () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe('POST /api/template with category', () => {
+  it('saves category when provided', async () => {
+    const res = await request(app).post('/api/template').set(auth())
+      .send({ name: 'Picanha', qty: 1, unit: 'kg', category: 'carne' });
+    expect(res.status).toBe(201);
+    expect(res.body.category).toBe('carne');
+  });
+
+  it('defaults category to empty string', async () => {
+    const res = await request(app).post('/api/template').set(auth())
+      .send({ name: 'Farinha', qty: 1, unit: 'kg' });
+    expect(res.status).toBe(201);
+    expect(res.body.category).toBe('');
+  });
+});
+
+describe('PATCH /api/template/:id with category', () => {
+  it('updates category', async () => {
+    const { body: item } = await request(app).post('/api/template').set(auth())
+      .send({ name: 'Leite', qty: 1, unit: 'L' });
+    const res = await request(app).patch(`/api/template/${item.id}`).set(auth())
+      .send({ category: 'laticinios' });
+    expect(res.status).toBe(200);
+    expect(res.body.category).toBe('laticinios');
+  });
+});

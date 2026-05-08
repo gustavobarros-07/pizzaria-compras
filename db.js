@@ -32,6 +32,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS trips (
     id          TEXT PRIMARY KEY,
     grand_total REAL NOT NULL DEFAULT 0,
+    store_name  TEXT NOT NULL DEFAULT '',
     finished_at TEXT DEFAULT (datetime('now'))
   );
 
@@ -49,6 +50,7 @@ db.exec(`
     name       TEXT NOT NULL,
     qty        REAL NOT NULL DEFAULT 1,
     unit       TEXT NOT NULL DEFAULT 'un',
+    category   TEXT NOT NULL DEFAULT '',
     sort_order INTEGER NOT NULL DEFAULT 0
   );
 
@@ -57,10 +59,32 @@ db.exec(`
     name       TEXT NOT NULL,
     qty        REAL NOT NULL DEFAULT 0,
     unit       TEXT NOT NULL DEFAULT 'un',
+    category   TEXT NOT NULL DEFAULT '',
     min_qty    REAL NOT NULL DEFAULT 0,
     updated_at TEXT DEFAULT (datetime('now'))
   );
+
+  CREATE TABLE IF NOT EXISTS avulsas (
+    id           TEXT PRIMARY KEY,
+    name         TEXT NOT NULL,
+    qty          REAL NOT NULL DEFAULT 1,
+    unit         TEXT NOT NULL DEFAULT 'un',
+    category     TEXT NOT NULL DEFAULT '',
+    total_paid   REAL NOT NULL DEFAULT 0,
+    store_name   TEXT NOT NULL DEFAULT '',
+    purchased_at TEXT DEFAULT (datetime('now'))
+  );
 `);
+
+// Safe migrations for existing production databases
+function safeAlter(sql) {
+  try { db.exec(sql); } catch (e) {
+    if (!e.message.includes('duplicate column name')) throw e;
+  }
+}
+safeAlter("ALTER TABLE template_items ADD COLUMN category TEXT NOT NULL DEFAULT ''");
+safeAlter("ALTER TABLE stock_items ADD COLUMN category TEXT NOT NULL DEFAULT ''");
+safeAlter("ALTER TABLE trips ADD COLUMN store_name TEXT NOT NULL DEFAULT ''");
 
 const existing = db.prepare('SELECT id FROM credentials WHERE id = 1').get();
 if (!existing) {

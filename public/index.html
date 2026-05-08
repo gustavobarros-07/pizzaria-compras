@@ -415,6 +415,67 @@
     </div>
   </div>
 
+  <!-- ===================== AVULSAS VIEW ===================== -->
+  <div id="view-avulsas" class="view flex-1 pb-24 overflow-y-auto">
+    <div class="text-white px-5 pt-12 pb-6" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)">
+      <div class="flex items-start justify-between">
+        <div>
+          <h2 class="text-2xl font-bold">Compra Avulsa</h2>
+          <p class="text-purple-200 text-sm mt-1">Registre uma compra rápida sem lista</p>
+        </div>
+        <button onclick="openHelp()" class="text-purple-200 hover:text-white mt-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="px-4 pt-4">
+      <div class="bg-white rounded-2xl p-4 shadow-sm mb-4">
+        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Nova compra avulsa</h3>
+        <div class="mb-3">
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Produto</label>
+          <input type="text" id="avulsa-name" placeholder="Ex: Mozzarella" autocomplete="off" />
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-1">Quantidade</label>
+            <input type="number" id="avulsa-qty" placeholder="1" min="0.01" step="0.01" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-1">Unidade</label>
+            <select id="avulsa-unit">
+              <option value="un">unidade</option>
+              <option value="kg">kg</option>
+              <option value="g">g</option>
+              <option value="L">L</option>
+              <option value="ml">ml</option>
+              <option value="pct">pacote</option>
+              <option value="cx">caixa</option>
+              <option value="dz">dúzia</option>
+              <option value="fardo">fardo</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-1">Preço pago (R$)</label>
+            <input type="number" id="avulsa-price" placeholder="0,00" min="0" step="0.01" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-600 mb-1">Mercado</label>
+            <input type="text" id="avulsa-store" placeholder="Ex: Atacadão" autocomplete="off" />
+          </div>
+        </div>
+        <button onclick="addAvulsa()" class="btn-purple">Registrar compra avulsa</button>
+      </div>
+      <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Compras registradas</h3>
+      <div id="avulsas-container"></div>
+      <div id="empty-avulsas" class="text-center py-12 hidden">
+        <div class="text-5xl mb-3">🛍️</div>
+        <p class="text-gray-400 text-sm">Nenhuma compra avulsa registrada ainda.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== BOTTOM NAV ===================== -->
   <nav class="bottom-nav" id="bottom-nav" style="display:none">
     <button class="nav-btn" id="nav-home" onclick="navigateTo('home')">
@@ -443,6 +504,13 @@
         <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
         <line x1="12" y1="22.08" x2="12" y2="12"/>
       </svg>Estoque
+    </button>
+    <button class="nav-btn" id="nav-avulsas" onclick="navigateTo('avulsas')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>Avulsas
     </button>
     <button class="nav-btn" id="nav-settings" onclick="navigateTo('settings')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -858,6 +926,7 @@ function navigateTo(view) {
   if (view === 'history')  loadHistory();
   if (view === 'stock')    loadStock();
   if (view === 'template') loadTemplate();
+  if (view === 'avulsas')  loadAvulsas();
 }
 
 // ===== LOADING =====
@@ -1680,6 +1749,81 @@ async function deleteStockItem() {
     stockList = stockList.filter(s => s.id !== stockItemId);
     renderStock();
   } catch { showError('Erro ao remover item.'); } finally { hideLoading(); }
+}
+
+// ===== AVULSAS =====
+let avulsasList = [];
+
+async function loadAvulsas() {
+  showLoading();
+  try {
+    const res = await authFetch('/api/avulsas');
+    if (!res) return;
+    avulsasList = await res.json();
+    renderAvulsas();
+  } catch { showError('Erro ao carregar compras avulsas.'); } finally { hideLoading(); }
+}
+
+function renderAvulsas() {
+  const emptyEl    = document.getElementById('empty-avulsas');
+  const container  = document.getElementById('avulsas-container');
+  emptyEl.classList.toggle('hidden', avulsasList.length > 0);
+  container.innerHTML = avulsasList.map(a => {
+    const d = new Date(a.purchased_at);
+    const dateStr = d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' });
+    const meta = [a.qty + ' ' + a.unit, a.store_name, dateStr].filter(Boolean).join(' · ');
+    return `
+      <div class="item-row">
+        <div class="flex items-center gap-3">
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-800 truncate">${esc(a.name)}</p>
+            <p class="text-xs text-gray-400">${esc(meta)}</p>
+          </div>
+          <div class="text-right mr-1">
+            <p class="font-bold text-sm" style="color:#7c3aed">${fmtBRL(a.total_paid)}</p>
+          </div>
+          <button onclick="deleteAvulsa('${a.id}')"
+            class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function addAvulsa() {
+  const name       = document.getElementById('avulsa-name').value.trim();
+  const qty        = parseFloat(document.getElementById('avulsa-qty').value) || 1;
+  const unit       = document.getElementById('avulsa-unit').value;
+  const total_paid = parseFloat(document.getElementById('avulsa-price').value) || 0;
+  const store_name = document.getElementById('avulsa-store').value.trim();
+  if (!name) { document.getElementById('avulsa-name').focus(); return; }
+
+  showLoading();
+  try {
+    const res = await authFetch('/api/avulsas', {
+      method: 'POST',
+      body: JSON.stringify({ name, qty, unit, total_paid, store_name })
+    });
+    if (!res) return;
+    const item = await res.json();
+    avulsasList.unshift(item);
+    document.getElementById('avulsa-name').value  = '';
+    document.getElementById('avulsa-qty').value   = '1';
+    document.getElementById('avulsa-unit').value  = 'un';
+    document.getElementById('avulsa-price').value = '';
+    document.getElementById('avulsa-store').value = '';
+    renderAvulsas();
+  } catch { showError('Erro ao registrar compra avulsa.'); } finally { hideLoading(); }
+}
+
+async function deleteAvulsa(id) {
+  if (!confirm('Excluir esta compra avulsa?')) return;
+  showLoading();
+  try {
+    const res = await authFetch(`/api/avulsas/${id}`, { method: 'DELETE' });
+    if (!res) return;
+    avulsasList = avulsasList.filter(a => a.id !== id);
+    renderAvulsas();
+  } catch { showError('Erro ao excluir.'); } finally { hideLoading(); }
 }
 
 // ===== UTILS =====

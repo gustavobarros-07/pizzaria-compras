@@ -49,6 +49,10 @@ router.patch('/:id', (req, res) => {
 
   if (Object.keys(updates).length === 0) return res.status(400).json({ error: 'Nenhum campo para atualizar' });
 
+  if (updates.finished_at !== undefined && (typeof updates.finished_at !== 'string' || updates.finished_at.trim() === '')) {
+    return res.status(400).json({ error: 'Data inválida' });
+  }
+
   const setClauses = Object.keys(updates).map(k => `${k} = ?`).join(', ');
   db.prepare(`UPDATE trips SET ${setClauses} WHERE id = ?`)
     .run(...Object.values(updates), req.params.id);

@@ -165,6 +165,17 @@ describe('PATCH /api/trips/:id', () => {
       .send({});
     expect(res.status).toBe(400);
   });
+
+  it('updates finished_at', async () => {
+    await addCheckedItem('Sal', 5);
+    const { body: trip } = await request(app).post('/api/trips').set(auth());
+
+    const res = await request(app).patch(`/api/trips/${trip.id}`)
+      .set(auth())
+      .send({ finished_at: '2026-01-15 10:00:00' });
+    expect(res.status).toBe(200);
+    expect(res.body.finished_at).toBe('2026-01-15 10:00:00');
+  });
 });
 
 describe('DELETE /api/trips/:id', () => {

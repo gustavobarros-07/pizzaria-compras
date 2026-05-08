@@ -20,30 +20,34 @@ router.post('/', (req, res) => {
   const grandTotal = checked.reduce((s, i) => s + (i.total_paid || 0), 0);
   const tripId = randomUUID();
 
-  const insertTrip = db.prepare('INSERT INTO trips (id, grand_total) VALUES (?, ?)');
-  const insertItem = db.prepare(
+  const insertTrip  = db.prepare('INSERT INTO trips (id, grand_total) VALUES (?, ?)');
+  const insertItem  = db.prepare(
     'INSERT INTO trip_items (id, trip_id, name, qty, unit, total_paid) VALUES (?, ?, ?, ?, ?, ?)'
   );
-  const clearList = db.prepare('DELETE FROM list_items');
+  const clearList   = db.prepare('DELETE FROM list_items');
+  const updateStock = db.prepare(
+    "UPDATE stock_items SET qty = qty + ?, updated_at = datetime('now') WHERE LOWER(name) = LOWER(?)"
+  );
 
   db.transaction(() => {
     insertTrip.run(tripId, grandTotal);
     for (const item of checked) {
       insertItem.run(randomUUID(), tripId, item.name, item.qty, item.unit, item.total_paid);
+      updateStock.run(item.qty, item.name);
     }
     clearList.run();
   })();
 
-  const trip = db.prepare('SELECT * FROM trips WHERE id = ?').get(tripId);
-  res.status(201).json(trip);
+  res.status(201).json(db.prepare('SELECT * FROM trips WHERE id = ?').get(tripId));
 });
 
 router.get('/:id', (req, res) => {
   const trip = db.prepare('SELECT * FROM trips WHERE id = ?').get(req.params.id);
   if (!trip) return res.status(404).json({ error: 'Compra não encontrada' });
 
-  const items = db.prepare('SELECT * FROM trip_items WHERE trip_id = ? ORDER BY name')
-    .all(req.params.id);
+  const items = db.prepare(
+    'SELECT * FROM trip_items WHERE trip_id = ? ORDER BY name'
+  ).all(req.params.id);
   res.json({ ...trip, items });
 });
 

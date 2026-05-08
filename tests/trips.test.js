@@ -15,6 +15,7 @@ afterEach(() => {
   db.prepare('DELETE FROM trip_items').run();
   db.prepare('DELETE FROM trips').run();
   db.prepare('DELETE FROM list_items').run();
+  db.prepare('DELETE FROM stock_items').run();
 });
 
 function auth() {
@@ -79,5 +80,41 @@ describe('GET /api/trips/:id', () => {
   it('returns 404 for unknown trip', async () => {
     const res = await request(app).get('/api/trips/nao-existe').set(auth());
     expect(res.status).toBe(404);
+  });
+});
+
+describe('POST /api/trips (stock update)', () => {
+  it('increments stock qty when trip item name matches a stock item', async () => {
+    const db = require('../db');
+    db.prepare(
+      'INSERT INTO stock_items (id, name, qty, unit, min_qty) VALUES (?, ?, ?, ?, ?)'
+    ).run('s1', 'Farinha', 5, 'kg', 2);
+
+    await addCheckedItem('Farinha', 20);
+
+    await request(app).post('/api/trips').set(auth());
+
+    const stock = db.prepare('SELECT qty FROM stock_items WHERE id = ?').get('s1');
+    expect(stock.qty).toBe(6);
+  });
+
+  it('is case-insensitive when matching stock item names', async () => {
+    const db = require('../db');
+    db.prepare(
+      'INSERT INTO stock_items (id, name, qty, unit, min_qty) VALUES (?, ?, ?, ?, ?)'
+    ).run('s2', 'mozzarella', 3, 'kg', 1);
+
+    await addCheckedItem('Mozzarella', 30);
+
+    await request(app).post('/api/trips').set(auth());
+
+    const stock = db.prepare('SELECT qty FROM stock_items WHERE id = ?').get('s2');
+    expect(stock.qty).toBe(4);
+  });
+
+  it('does not fail when no matching stock item exists', async () => {
+    await addCheckedItem('Produto sem estoque', 10);
+    const res = await request(app).post('/api/trips').set(auth());
+    expect(res.status).toBe(201);
   });
 });

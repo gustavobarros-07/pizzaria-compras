@@ -1481,7 +1481,12 @@ function renderTemplate() {
     editBtn.textContent  = 'Editar lista';
     title.textContent    = 'Lista Padrão';
     subtitle.textContent = 'Selecione os itens para esta compra';
-    setTemplateFilter(templateCategoryFilter);
+    document.querySelectorAll('#template-filters .cat-chip').forEach(btn => {
+      const chipCat = btn.dataset.cat;
+      const isActive = chipCat === templateCategoryFilter;
+      const c = isActive ? CAT_CHIP_ACTIVE[chipCat] : CAT_CHIP_INACTIVE[chipCat];
+      if (c) { btn.style.background = c.bg; btn.style.color = c.color; btn.style.borderColor = c.border; }
+    });
     updateTemplateFooterCount();
   }
 

@@ -43,6 +43,23 @@ db.exec(`
     unit       TEXT NOT NULL,
     total_paid REAL
   );
+
+  CREATE TABLE IF NOT EXISTS template_items (
+    id         TEXT PRIMARY KEY,
+    name       TEXT NOT NULL,
+    qty        REAL NOT NULL DEFAULT 1,
+    unit       TEXT NOT NULL DEFAULT 'un',
+    sort_order INTEGER NOT NULL DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS stock_items (
+    id         TEXT PRIMARY KEY,
+    name       TEXT NOT NULL,
+    qty        REAL NOT NULL DEFAULT 0,
+    unit       TEXT NOT NULL DEFAULT 'un',
+    min_qty    REAL NOT NULL DEFAULT 0,
+    updated_at TEXT DEFAULT (datetime('now'))
+  );
 `);
 
 const existing = db.prepare('SELECT id FROM credentials WHERE id = 1').get();

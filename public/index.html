@@ -154,7 +154,8 @@
           <div class="text-5xl mb-3">🛒</div>
           <h2 class="text-lg font-bold text-gray-800 mb-1">Nenhuma lista ativa</h2>
           <p class="text-gray-500 text-sm mb-5">Monte sua lista antes de ir ao mercado.</p>
-          <button class="btn-red" onclick="createNewList()">+ Nova Lista</button>
+          <button class="btn-red mb-3" onclick="navigateTo('template')">Usar lista padrão</button>
+          <button class="btn-outline" onclick="createNewList()">+ Nova lista manual</button>
         </div>
       </div>
       <div class="grid grid-cols-2 gap-3 mb-4">
@@ -244,6 +245,36 @@
       <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Itens comprados</h3>
       <div id="trip-detail-items"></div>
     </div>
+  </div>
+
+  <!-- ===================== TEMPLATE VIEW ===================== -->
+  <div id="view-template" class="view flex-1 pb-24 overflow-y-auto">
+    <div class="bg-red-600 text-white px-5 pt-12 pb-5 sticky top-0 z-20">
+      <div class="flex items-center justify-between mb-3">
+        <button onclick="navigateTo('list')" class="text-red-200 font-medium flex items-center gap-1 text-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>Lista
+        </button>
+        <button id="template-edit-btn" onclick="toggleTemplateEditMode()"
+          class="text-white font-semibold text-sm px-3 py-1.5 rounded-xl bg-red-700">
+          Editar lista
+        </button>
+      </div>
+      <h2 class="text-xl font-bold" id="template-view-title">Lista Padrão</h2>
+      <p class="text-red-200 text-sm mt-1" id="template-view-subtitle">Selecione os itens para esta compra</p>
+    </div>
+    <div class="px-4 pt-4">
+      <div id="template-container"></div>
+      <div id="empty-template" class="text-center py-12 hidden">
+        <div class="text-5xl mb-3">📋</div>
+        <p class="text-gray-400 text-sm">Nenhum item na lista padrão.<br>Toque em "Editar lista" para adicionar.</p>
+      </div>
+    </div>
+    <div id="template-select-footer" class="hidden" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:28rem;padding:16px 16px 32px;background:white;border-top:1px solid #f3f4f6;z-index:40;">
+      <button class="btn-red" onclick="confirmTemplateSelect()" id="btn-confirm-template">
+        Adicionar 0 itens à lista
+      </button>
+    </div>
+    <button class="fab hidden" id="template-fab" onclick="openAddTemplateModal()">+</button>
   </div>
 
   <!-- ===================== STOCK VIEW ===================== -->
@@ -505,6 +536,76 @@
     </div>
   </div>
 
+  <!-- Add Template Item -->
+  <div id="modal-add-template" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-bold">Adicionar à Lista Padrão</h3>
+        <button onclick="closeModal('modal-add-template')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do produto</label>
+        <input type="text" id="tmpl-add-name" placeholder="Ex: Farinha de trigo" autocomplete="off" />
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Quantidade</label>
+          <input type="number" id="tmpl-add-qty" placeholder="1" min="0.01" step="0.01" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Unidade</label>
+          <select id="tmpl-add-unit">
+            <option value="un">unidade</option>
+            <option value="kg">kg</option>
+            <option value="g">g</option>
+            <option value="L">L</option>
+            <option value="ml">ml</option>
+            <option value="pct">pacote</option>
+            <option value="cx">caixa</option>
+            <option value="dz">dúzia</option>
+            <option value="fardo">fardo</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-red" onclick="addTemplateItem()">Adicionar</button>
+    </div>
+  </div>
+
+  <!-- Edit Template Item -->
+  <div id="modal-edit-template" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-bold">Editar Item</h3>
+        <button onclick="closeModal('modal-edit-template')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Nome</label>
+        <input type="text" id="tmpl-edit-name" autocomplete="off" />
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Quantidade</label>
+          <input type="number" id="tmpl-edit-qty" min="0.01" step="0.01" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Unidade</label>
+          <select id="tmpl-edit-unit">
+            <option value="un">unidade</option>
+            <option value="kg">kg</option>
+            <option value="g">g</option>
+            <option value="L">L</option>
+            <option value="ml">ml</option>
+            <option value="pct">pacote</option>
+            <option value="cx">caixa</option>
+            <option value="dz">dúzia</option>
+            <option value="fardo">fardo</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-red" onclick="saveTemplateEdit()">Salvar</button>
+    </div>
+  </div>
+
 <script>
 // ===== AUTH =====
 const TOKEN_KEY = 'piz_token';
@@ -607,10 +708,11 @@ function navigateTo(view) {
     noNav.includes(view) ? 'none' : 'flex';
   currentView = view;
 
-  if (view === 'home')    loadHome();
-  if (view === 'list')    loadList();
-  if (view === 'history') loadHistory();
-  if (view === 'stock')   loadStock();
+  if (view === 'home')     loadHome();
+  if (view === 'list')     loadList();
+  if (view === 'history')  loadHistory();
+  if (view === 'stock')    loadStock();
+  if (view === 'template') loadTemplate();
 }
 
 // ===== LOADING =====
@@ -933,6 +1035,183 @@ document.getElementById('price-input').addEventListener('keydown', e => {
 document.getElementById('login-password').addEventListener('keydown', e => {
   if (e.key === 'Enter') doLogin();
 });
+
+// ===== TEMPLATE =====
+let templateList = [];
+let templateEditMode = false;
+let templateChecked = new Set();
+let editTemplateItemId = null;
+
+async function loadTemplate() {
+  showLoading();
+  try {
+    const res = await authFetch('/api/template');
+    if (!res) return;
+    templateList = await res.json();
+    templateChecked = new Set(templateList.map(i => i.id));
+    templateEditMode = false;
+    renderTemplate();
+  } catch { showError('Erro ao carregar lista padrão.'); } finally { hideLoading(); }
+}
+
+function renderTemplate() {
+  const emptyEl  = document.getElementById('empty-template');
+  const footer   = document.getElementById('template-select-footer');
+  const fab      = document.getElementById('template-fab');
+  const editBtn  = document.getElementById('template-edit-btn');
+  const title    = document.getElementById('template-view-title');
+  const subtitle = document.getElementById('template-view-subtitle');
+
+  emptyEl.classList.toggle('hidden', templateList.length > 0);
+
+  if (templateEditMode) {
+    footer.classList.add('hidden');
+    fab.classList.remove('hidden');
+    editBtn.textContent = 'Concluir';
+    title.textContent   = 'Editar Lista Padrão';
+    subtitle.textContent = 'Adicione, edite ou remova itens';
+  } else {
+    footer.classList.toggle('hidden', templateList.length === 0);
+    fab.classList.add('hidden');
+    editBtn.textContent  = 'Editar lista';
+    title.textContent    = 'Lista Padrão';
+    subtitle.textContent = 'Selecione os itens para esta compra';
+    updateTemplateFooterCount();
+  }
+
+  document.getElementById('template-container').innerHTML = templateList.map(item => {
+    if (templateEditMode) {
+      return `
+        <div class="item-row flex items-center gap-3" onclick="openEditTemplateModal('${item.id}')">
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
+            <p class="text-xs text-gray-400">${item.qty} ${item.unit}</p>
+          </div>
+          <button onclick="event.stopPropagation();deleteTemplateItem('${item.id}')"
+            class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+        </div>`;
+    }
+    const checked = templateChecked.has(item.id);
+    return `
+      <div class="item-row ${checked ? 'checked' : ''}" onclick="toggleTemplateItem('${item.id}')">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0
+            ${checked ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-300'}">
+            ${checked ? '✓' : '○'}
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
+            <p class="text-xs text-gray-400">${item.qty} ${item.unit}</p>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleTemplateItem(id) {
+  if (templateChecked.has(id)) {
+    templateChecked.delete(id);
+  } else {
+    templateChecked.add(id);
+  }
+  renderTemplate();
+}
+
+function updateTemplateFooterCount() {
+  const count = templateChecked.size;
+  document.getElementById('btn-confirm-template').textContent =
+    `Adicionar ${count} ite${count !== 1 ? 'ns' : 'm'} à lista`;
+}
+
+function toggleTemplateEditMode() {
+  templateEditMode = !templateEditMode;
+  renderTemplate();
+}
+
+async function confirmTemplateSelect() {
+  const selected = templateList.filter(i => templateChecked.has(i.id));
+  if (selected.length === 0) return;
+
+  showLoading();
+  try {
+    for (const item of selected) {
+      await authFetch('/api/items', {
+        method: 'POST',
+        body: JSON.stringify({ name: item.name, qty: item.qty, unit: item.unit })
+      });
+    }
+    navigateTo('list');
+  } catch { showError('Erro ao adicionar itens à lista.'); } finally { hideLoading(); }
+}
+
+function openAddTemplateModal() {
+  document.getElementById('tmpl-add-name').value = '';
+  document.getElementById('tmpl-add-qty').value  = '1';
+  document.getElementById('tmpl-add-unit').value = 'un';
+  openModal('modal-add-template');
+  setTimeout(() => document.getElementById('tmpl-add-name').focus(), 300);
+}
+
+async function addTemplateItem() {
+  const name = document.getElementById('tmpl-add-name').value.trim();
+  const qty  = parseFloat(document.getElementById('tmpl-add-qty').value) || 1;
+  const unit = document.getElementById('tmpl-add-unit').value;
+  if (!name) { document.getElementById('tmpl-add-name').focus(); return; }
+
+  closeModal('modal-add-template');
+  showLoading();
+  try {
+    const res = await authFetch('/api/template', {
+      method: 'POST',
+      body: JSON.stringify({ name, qty, unit })
+    });
+    if (!res) return;
+    const item = await res.json();
+    templateList.push(item);
+    renderTemplate();
+  } catch { showError('Erro ao adicionar item.'); } finally { hideLoading(); }
+}
+
+function openEditTemplateModal(id) {
+  const item = templateList.find(i => i.id === id);
+  if (!item) return;
+  editTemplateItemId = id;
+  document.getElementById('tmpl-edit-name').value = item.name;
+  document.getElementById('tmpl-edit-qty').value  = item.qty;
+  document.getElementById('tmpl-edit-unit').value = item.unit;
+  openModal('modal-edit-template');
+}
+
+async function saveTemplateEdit() {
+  const name = document.getElementById('tmpl-edit-name').value.trim();
+  const qty  = parseFloat(document.getElementById('tmpl-edit-qty').value) || 1;
+  const unit = document.getElementById('tmpl-edit-unit').value;
+  if (!name) { document.getElementById('tmpl-edit-name').focus(); return; }
+
+  closeModal('modal-edit-template');
+  showLoading();
+  try {
+    const res = await authFetch(`/api/template/${editTemplateItemId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ name, qty, unit })
+    });
+    if (!res) return;
+    const updated = await res.json();
+    const idx = templateList.findIndex(i => i.id === editTemplateItemId);
+    if (idx !== -1) templateList[idx] = updated;
+    renderTemplate();
+  } catch { showError('Erro ao editar item.'); } finally { hideLoading(); }
+}
+
+async function deleteTemplateItem(id) {
+  showLoading();
+  try {
+    const res = await authFetch(`/api/template/${id}`, { method: 'DELETE' });
+    if (!res) return;
+    templateList = templateList.filter(i => i.id !== id);
+    renderTemplate();
+  } catch { showError('Erro ao remover item.'); } finally { hideLoading(); }
+}
 
 // ===== STOCK =====
 let stockList = [];

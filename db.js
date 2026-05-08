@@ -10,10 +10,11 @@ const DB_PATH = process.env.DB_PATH || (() => {
 })();
 
 const db = new Database(DB_PATH);
+db.pragma('foreign_keys = ON');
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS credentials (
-    id      INTEGER PRIMARY KEY DEFAULT 1,
+    id      INTEGER PRIMARY KEY CHECK (id = 1),
     username TEXT NOT NULL,
     password_hash TEXT NOT NULL
   );

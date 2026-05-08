@@ -273,9 +273,20 @@
       <p class="text-red-200 text-sm" id="trip-detail-count">—</p>
     </div>
     <div class="px-4 pt-4">
-      <div class="bg-red-600 rounded-2xl p-5 mb-4 text-white text-center shadow-lg">
+      <div class="rounded-2xl p-5 mb-3 text-white text-center shadow-lg" style="background:linear-gradient(135deg,#dc2626,#b91c1c)">
         <p class="text-red-200 text-sm mb-1">Total gasto</p>
         <p class="text-4xl font-bold" id="trip-detail-total">R$ 0,00</p>
+        <p class="text-red-300 text-sm mt-1" id="trip-detail-store"></p>
+      </div>
+      <div class="flex gap-3 mb-4">
+        <button onclick="openEditTripModal()"
+          class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-600 border border-blue-200">
+          ✏️ Editar
+        </button>
+        <button onclick="confirmDeleteTrip()"
+          class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-red-50 text-red-500 border border-red-200">
+          🗑️ Excluir
+        </button>
       </div>
       <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Itens comprados</h3>
       <div id="trip-detail-items"></div>
@@ -691,6 +702,28 @@
     </div>
   </div>
 
+  <!-- Edit Trip -->
+  <div id="modal-edit-trip" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-lg font-bold">Editar Compra</h3>
+        <button onclick="closeModal('modal-edit-trip')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do mercado</label>
+        <input type="text" id="edit-trip-store" placeholder="Ex: Atacadão, BH..." autocomplete="off" />
+      </div>
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Data</label>
+        <input type="date" id="edit-trip-date" />
+      </div>
+      <div class="flex gap-3">
+        <button class="btn-outline" style="flex:1" onclick="closeModal('modal-edit-trip')">Cancelar</button>
+        <button class="btn-red" style="flex:2" onclick="saveEditTrip()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
 <script>
 // ===== AUTH =====
 const TOKEN_KEY = 'piz_token';
@@ -1077,10 +1110,11 @@ function renderHistory() {
 function tripCardHTML(t) {
   const d = new Date(t.finished_at);
   const dateStr = d.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' });
+  const storePart = t.store_name ? ` · ${esc(t.store_name)}` : '';
   return `
     <div class="flex items-center justify-between">
       <div>
-        <p class="font-semibold text-gray-800">${dateStr}</p>
+        <p class="font-semibold text-gray-800">${dateStr}${storePart}</p>
         <p class="text-xs text-gray-400 mt-0.5">${fmtBRL(t.grand_total)}</p>
       </div>
       <svg class="w-5 h-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1097,11 +1131,15 @@ async function openTrip(id) {
     const trip = await res.json();
     hideLoading();
 
+    currentTripId   = id;
+    currentTripData = trip;
+
     const d = new Date(trip.finished_at);
-    const dateStr = d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    document.getElementById('trip-detail-date').textContent  = dateStr;
+    document.getElementById('trip-detail-date').textContent  =
+      d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     document.getElementById('trip-detail-count').textContent = `${trip.items.length} ite${trip.items.length !== 1 ? 'ns' : 'm'}`;
     document.getElementById('trip-detail-total').textContent = fmtBRL(trip.grand_total);
+    document.getElementById('trip-detail-store').textContent = trip.store_name || '';
     document.getElementById('trip-detail-items').innerHTML   = (trip.items || []).map(i => `
       <div class="bg-white rounded-xl p-4 mb-2 shadow-sm flex items-center justify-between">
         <div>
@@ -1112,11 +1150,51 @@ async function openTrip(id) {
       </div>
     `).join('') || '<p class="text-center text-gray-400 py-4">Nenhum item registrado.</p>';
 
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-trip').classList.add('active');
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    currentView = 'trip';
+    navigateTo('trip');
   } catch { hideLoading(); showError('Erro ao carregar compra.'); }
+}
+
+function openEditTripModal() {
+  if (!currentTripData) return;
+  document.getElementById('edit-trip-store').value = currentTripData.store_name || '';
+  const d = new Date(currentTripData.finished_at);
+  document.getElementById('edit-trip-date').value = d.toISOString().slice(0, 10);
+  openModal('modal-edit-trip');
+}
+
+async function saveEditTrip() {
+  const store_name  = document.getElementById('edit-trip-store').value.trim();
+  const finished_at = document.getElementById('edit-trip-date').value;
+  if (!finished_at) { document.getElementById('edit-trip-date').focus(); return; }
+
+  closeModal('modal-edit-trip');
+  showLoading();
+  try {
+    const res = await authFetch(`/api/trips/${currentTripId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ store_name, finished_at })
+    });
+    if (!res || !res.ok) { showError('Erro ao salvar.'); return; }
+    const updated = await res.json();
+    currentTripData = updated;
+    const d = new Date(updated.finished_at);
+    document.getElementById('trip-detail-date').textContent  =
+      d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('trip-detail-store').textContent = updated.store_name || '';
+    const idx = trips.findIndex(t => t.id === currentTripId);
+    if (idx !== -1) trips[idx] = updated;
+  } catch { showError('Erro ao salvar.'); } finally { hideLoading(); }
+}
+
+async function confirmDeleteTrip() {
+  if (!confirm('Excluir esta compra permanentemente?')) return;
+  showLoading();
+  try {
+    const res = await authFetch(`/api/trips/${currentTripId}`, { method: 'DELETE' });
+    if (!res || !res.ok) { showError('Erro ao excluir.'); return; }
+    trips = trips.filter(t => t.id !== currentTripId);
+    navigateTo('history');
+  } catch { showError('Erro ao excluir.'); } finally { hideLoading(); }
 }
 
 // ===== MODAL HELPERS =====
@@ -1376,6 +1454,8 @@ async function deleteTemplateItem(id) {
 }
 
 // ===== STOCK =====
+let currentTripId   = null;
+let currentTripData = null;
 let stockList = [];
 let stockItemId = null;
 let stockAdjType = 'entrada';

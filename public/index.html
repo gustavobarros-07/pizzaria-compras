@@ -98,6 +98,8 @@
     .item-row.cat-laticinios { border-left: 4px solid #0ea5e9; }
     .item-row.cat-doces      { border-left: 4px solid #ec4899; }
     .item-row.cat-outros     { border-left: 4px solid #64748b; }
+    .item-row.cat-bebidas  { border-left: 4px solid #06b6d4; }
+    .item-row.cat-limpeza  { border-left: 4px solid #10b981; }
 
     /* Category filter chips */
     .cat-chip {
@@ -350,12 +352,22 @@
     </div>
     <div class="px-4 pt-4">
       <!-- Filtros de categoria (apenas modo seleção) -->
-      <div id="template-filters" class="hidden flex gap-2 overflow-x-auto pb-2 mb-3">
-        <button class="cat-chip" data-cat="" onclick="setTemplateFilter('')">Todos</button>
-        <button class="cat-chip" data-cat="carne" onclick="setTemplateFilter('carne')">🥩 Carne</button>
-        <button class="cat-chip" data-cat="laticinios" onclick="setTemplateFilter('laticinios')">🥛 Laticínios</button>
-        <button class="cat-chip" data-cat="doces" onclick="setTemplateFilter('doces')">🍬 Doces</button>
-        <button class="cat-chip" data-cat="outros" onclick="setTemplateFilter('outros')">📦 Outros</button>
+      <div id="template-filters" class="hidden mb-2">
+        <div class="flex gap-2 overflow-x-auto pb-1">
+          <button class="cat-chip" data-cat="" onclick="setTemplateFilter('')">Todos</button>
+          <button class="cat-chip" data-cat="semcat" onclick="setTemplateFilter('semcat')">📋 Sem cat.</button>
+          <button class="cat-chip" data-cat="carne" onclick="setTemplateFilter('carne')">🥩 Carne</button>
+          <button class="cat-chip" data-cat="laticinios" onclick="setTemplateFilter('laticinios')">🥛 Laticínios</button>
+          <button class="cat-chip" data-cat="doces" onclick="setTemplateFilter('doces')">🍬 Doces</button>
+          <button class="cat-chip" data-cat="bebidas" onclick="setTemplateFilter('bebidas')">🥤 Bebidas</button>
+          <button class="cat-chip" data-cat="limpeza" onclick="setTemplateFilter('limpeza')">🧹 Limpeza</button>
+          <button class="cat-chip" data-cat="outros" onclick="setTemplateFilter('outros')">📦 Outros</button>
+        </div>
+        <div class="flex gap-2 mt-2 pb-1">
+          <button id="sort-az"  onclick="setSortMode('az')"  class="cat-chip text-xs">A→Z</button>
+          <button id="sort-za"  onclick="setSortMode('za')"  class="cat-chip text-xs">Z→A</button>
+          <button id="sort-cat" onclick="setSortMode('cat')" class="cat-chip text-xs">Por categoria</button>
+        </div>
       </div>
       <div id="template-container"></div>
       <div id="empty-template" class="text-center py-12 hidden">
@@ -676,6 +688,8 @@
           <option value="carne">Carne</option>
           <option value="laticinios">Laticínios</option>
           <option value="doces">Doces</option>
+          <option value="bebidas">Bebidas</option>
+          <option value="limpeza">Limpeza</option>
           <option value="outros">Outros</option>
         </select>
       </div>
@@ -735,6 +749,8 @@
             <option value="carne">Carne</option>
             <option value="laticinios">Laticínios</option>
             <option value="doces">Doces</option>
+            <option value="bebidas">Bebidas</option>
+            <option value="limpeza">Limpeza</option>
             <option value="outros">Outros</option>
           </select>
         </div>
@@ -785,6 +801,8 @@
           <option value="carne">Carne</option>
           <option value="laticinios">Laticínios</option>
           <option value="doces">Doces</option>
+          <option value="bebidas">Bebidas</option>
+          <option value="limpeza">Limpeza</option>
           <option value="outros">Outros</option>
         </select>
       </div>
@@ -830,6 +848,8 @@
           <option value="carne">Carne</option>
           <option value="laticinios">Laticínios</option>
           <option value="doces">Doces</option>
+          <option value="bebidas">Bebidas</option>
+          <option value="limpeza">Limpeza</option>
           <option value="outros">Outros</option>
         </select>
       </div>
@@ -1427,19 +1447,26 @@ let templateEditMode = false;
 let templateChecked = new Set();
 let editTemplateItemId = null;
 let templateCategoryFilter = '';
+let templateSortMode = 'az';
 
 const CAT_CHIP_ACTIVE = {
   '':          { bg: '#1e293b', color: '#fff', border: '#1e293b' },
+  'semcat':    { bg: '#94a3b8', color: '#fff', border: '#94a3b8' },
   'carne':     { bg: '#f97316', color: '#fff', border: '#f97316' },
   'laticinios':{ bg: '#0ea5e9', color: '#fff', border: '#0ea5e9' },
   'doces':     { bg: '#ec4899', color: '#fff', border: '#ec4899' },
+  'bebidas':   { bg: '#06b6d4', color: '#fff', border: '#06b6d4' },
+  'limpeza':   { bg: '#10b981', color: '#fff', border: '#10b981' },
   'outros':    { bg: '#64748b', color: '#fff', border: '#64748b' },
 };
 const CAT_CHIP_INACTIVE = {
   '':          { bg: '#f1f5f9', color: '#64748b', border: '#e2e8f0' },
+  'semcat':    { bg: '#f8fafc', color: '#94a3b8', border: '#e2e8f0' },
   'carne':     { bg: '#fff7ed', color: '#ea580c', border: '#fed7aa' },
   'laticinios':{ bg: '#f0f9ff', color: '#0284c7', border: '#bae6fd' },
   'doces':     { bg: '#fdf2f8', color: '#db2777', border: '#fbcfe8' },
+  'bebidas':   { bg: '#ecfeff', color: '#0891b2', border: '#a5f3fc' },
+  'limpeza':   { bg: '#f0fdf4', color: '#059669', border: '#a7f3d0' },
   'outros':    { bg: '#f8fafc', color: '#475569', border: '#e2e8f0' },
 };
 
@@ -1452,6 +1479,7 @@ async function loadTemplate() {
     templateChecked = new Set(templateList.map(i => i.id));
     templateEditMode = false;
     templateCategoryFilter = '';
+    templateSortMode = 'az';
     renderTemplate();
   } catch { showError('Erro ao carregar lista padrão.'); } finally { hideLoading(); }
 }
@@ -1481,33 +1509,72 @@ function renderTemplate() {
     editBtn.textContent  = 'Editar lista';
     title.textContent    = 'Lista Padrão';
     subtitle.textContent = 'Selecione os itens para esta compra';
-    document.querySelectorAll('#template-filters .cat-chip').forEach(btn => {
+    document.querySelectorAll('#template-filters .cat-chip[data-cat]').forEach(btn => {
       const chipCat = btn.dataset.cat;
       const isActive = chipCat === templateCategoryFilter;
       const c = isActive ? CAT_CHIP_ACTIVE[chipCat] : CAT_CHIP_INACTIVE[chipCat];
       if (c) { btn.style.background = c.bg; btn.style.color = c.color; btn.style.borderColor = c.border; }
     });
+    ['az','za','cat'].forEach(m => {
+      const btn = document.getElementById('sort-' + m);
+      if (!btn) return;
+      if (m === templateSortMode) {
+        btn.style.background = '#1e293b'; btn.style.color = '#fff'; btn.style.borderColor = '#1e293b';
+      } else {
+        btn.style.background = '#f1f5f9'; btn.style.color = '#64748b'; btn.style.borderColor = '#e2e8f0';
+      }
+    });
     updateTemplateFooterCount();
   }
 
-  const visibleItems = (!templateEditMode && templateCategoryFilter)
-    ? templateList.filter(i => (i.category || 'outros') === templateCategoryFilter)
-    : templateList;
+  // filter
+  let visibleItems;
+  if (!templateEditMode && templateCategoryFilter) {
+    visibleItems = templateCategoryFilter === 'semcat'
+      ? templateList.filter(i => !i.category)
+      : templateList.filter(i => i.category === templateCategoryFilter);
+  } else {
+    visibleItems = [...templateList];
+  }
+
+  // sort (selection mode only)
+  if (!templateEditMode) {
+    if (templateSortMode === 'za') {
+      visibleItems.sort((a, b) => b.name.localeCompare(a.name, 'pt-BR'));
+    } else if (templateSortMode === 'cat') {
+      visibleItems.sort((a, b) => (a.category || 'zzz').localeCompare(b.category || 'zzz', 'pt-BR') || a.name.localeCompare(b.name, 'pt-BR'));
+    } else {
+      visibleItems.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+    }
+  }
+
+  const CAT_LABEL = { carne: 'Carne', laticinios: 'Laticínios', doces: 'Doces', bebidas: 'Bebidas', limpeza: 'Limpeza', outros: 'Outros' };
+
+  if (!templateEditMode && visibleItems.length === 0 && templateList.length > 0) {
+    document.getElementById('template-container').innerHTML = `
+      <div class="text-center py-10">
+        <div class="text-4xl mb-3">🔍</div>
+        <p class="text-gray-500 text-sm">Nenhum item nesta categoria.</p>
+        <p class="text-gray-400 text-xs mt-1">Toque em "Editar lista" para categorizar seus itens.</p>
+      </div>`;
+    return;
+  }
 
   document.getElementById('template-container').innerHTML = visibleItems.map(item => {
     if (templateEditMode) {
-      const catLabel = { carne: 'Carne', laticinios: 'Laticínios', doces: 'Doces', outros: 'Outros' }[item.category] || '';
+      const label = CAT_LABEL[item.category] || '';
       return `
         <div class="item-row ${item.category ? 'cat-' + item.category : ''} flex items-center gap-3" onclick="openEditTemplateModal('${item.id}')">
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
-            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${catLabel ? ' · ' + catLabel : ''}</p>
+            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' · ' + label : ''}</p>
           </div>
           <button onclick="event.stopPropagation();deleteTemplateItem('${item.id}')"
             class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
         </div>`;
     }
     const checked = templateChecked.has(item.id);
+    const label = CAT_LABEL[item.category] || '';
     return `
       <div class="item-row ${checked ? 'checked' : (item.category ? 'cat-' + item.category : '')}" onclick="toggleTemplateItem('${item.id}')">
         <div class="flex items-center gap-3">
@@ -1517,7 +1584,7 @@ function renderTemplate() {
           </div>
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
-            <p class="text-xs text-gray-400">${item.qty} ${item.unit}</p>
+            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' · ' + label : ''}</p>
           </div>
         </div>
       </div>`;
@@ -1550,10 +1617,20 @@ function setTemplateFilter(cat) {
   renderTemplate();
 }
 
+function setSortMode(mode) {
+  templateSortMode = mode;
+  renderTemplate();
+}
+
 function toggleSelectAll() {
-  const visibleItems = templateCategoryFilter
-    ? templateList.filter(i => (i.category || 'outros') === templateCategoryFilter)
-    : templateList;
+  let visibleItems;
+  if (templateCategoryFilter === 'semcat') {
+    visibleItems = templateList.filter(i => !i.category);
+  } else if (templateCategoryFilter) {
+    visibleItems = templateList.filter(i => i.category === templateCategoryFilter);
+  } else {
+    visibleItems = templateList;
+  }
   const visibleIds = visibleItems.map(i => i.id);
   const allSelected = visibleIds.every(id => templateChecked.has(id));
   visibleIds.forEach(id => allSelected ? templateChecked.delete(id) : templateChecked.add(id));

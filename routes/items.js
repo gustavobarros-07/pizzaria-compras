@@ -30,6 +30,8 @@ router.patch('/:id', (req, res) => {
   const updates = {};
   if (req.body.checked !== undefined) updates.checked = req.body.checked ? 1 : 0;
   if (req.body.total_paid !== undefined) updates.total_paid = req.body.total_paid;
+  if (req.body.qty !== undefined) updates.qty = req.body.qty;
+  if (req.body.unit !== undefined) updates.unit = req.body.unit;
 
   if (Object.keys(updates).length === 0) {
     return res.status(400).json({ error: 'Nenhum campo para atualizar' });
@@ -41,6 +43,11 @@ router.patch('/:id', (req, res) => {
 
   const updated = db.prepare('SELECT * FROM list_items WHERE id = ?').get(req.params.id);
   res.json({ ...updated, checked: !!updated.checked });
+});
+
+router.delete('/', (req, res) => {
+  db.prepare('DELETE FROM list_items').run();
+  res.json({ ok: true });
 });
 
 router.delete('/:id', (req, res) => {

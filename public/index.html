@@ -249,9 +249,14 @@
   <div id="view-list" class="view flex-1 pb-24 overflow-y-auto">
     <div class="bg-red-600 text-white px-5 pt-12 pb-5 sticky top-0 z-20">
       <div class="flex items-center justify-between mb-3">
-        <button onclick="navigateTo('home')" class="text-red-200 font-medium flex items-center gap-1 text-sm">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>Início
-        </button>
+        <div class="flex items-center gap-3">
+          <button onclick="navigateTo('home')" class="text-red-200 font-medium flex items-center gap-1 text-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>Início
+          </button>
+          <button onclick="openClearListModal()" class="text-red-300 hover:text-white" title="Apagar lista">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
         <button onclick="openFinishModal()" id="btn-finish"
           class="bg-white text-red-600 font-bold text-sm px-4 py-2 rounded-xl">Finalizar ✓</button>
       </div>
@@ -594,11 +599,28 @@
   <!-- Set Price -->
   <div id="modal-price" class="modal-overlay hidden">
     <div class="modal-sheet">
-      <div class="flex items-center justify-between mb-1">
+      <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-bold" id="price-modal-title">—</h3>
         <button onclick="closeModal('modal-price')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
       </div>
-      <p class="text-sm text-gray-400 mb-5" id="price-modal-qty">—</p>
+      <div class="flex gap-2 mb-4">
+        <div style="flex:1">
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Quantidade</label>
+          <input type="number" id="price-qty-input" min="0.01" step="0.01" class="text-center font-bold" />
+        </div>
+        <div style="flex:1">
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Unidade</label>
+          <select id="price-unit-input">
+            <option value="un">un</option>
+            <option value="kg">kg</option>
+            <option value="g">g</option>
+            <option value="L">L</option>
+            <option value="ml">ml</option>
+            <option value="cx">cx</option>
+            <option value="pct">pct</option>
+          </select>
+        </div>
+      </div>
       <div class="mb-5">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Preço total pago (R$)</label>
         <input type="number" id="price-input" placeholder="0,00" min="0" step="0.01" class="text-2xl font-bold text-center" />
@@ -634,14 +656,14 @@
     </div>
   </div>
 
-  <!-- Delete Item -->
-  <div id="modal-delete" class="modal-overlay hidden">
+  <!-- Clear List -->
+  <div id="modal-clear-list" class="modal-overlay hidden">
     <div class="modal-sheet">
-      <h3 class="text-lg font-bold mb-2">Remover item?</h3>
-      <p class="text-gray-400 text-sm mb-5" id="delete-item-name">—</p>
+      <h3 class="text-lg font-bold mb-2">Apagar lista?</h3>
+      <p class="text-gray-400 text-sm mb-5">Todos os itens serão removidos. Essa ação não pode ser desfeita.</p>
       <div class="flex gap-3">
-        <button class="btn-outline" style="flex:1" onclick="closeModal('modal-delete')">Cancelar</button>
-        <button class="btn-red" style="flex:2;background:#ef4444" onclick="deleteItem()">Remover</button>
+        <button class="btn-outline" style="flex:1" onclick="closeModal('modal-clear-list')">Cancelar</button>
+        <button class="btn-red" style="flex:2;background:#ef4444" onclick="clearList()">Apagar tudo</button>
       </div>
     </div>
   </div>
@@ -1179,7 +1201,7 @@ function itemRowHTML(item) {
           <p class="text-xs text-gray-400">${item.qty} ${item.unit}</p>
         </div>
         <div class="text-right mr-1">${price}</div>
-        <button onclick="event.stopPropagation();openDeleteModal('${item.id}')"
+        <button onclick="event.stopPropagation();deleteItem('${item.id}')"
           class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
       </div>
     </div>`;
@@ -1226,21 +1248,24 @@ function openPriceModal(id) {
   if (!item) return;
   priceItemId = id;
   document.getElementById('price-modal-title').textContent = item.name;
-  document.getElementById('price-modal-qty').textContent   = `Quantidade: ${item.qty} ${item.unit}`;
+  document.getElementById('price-qty-input').value         = item.qty;
+  document.getElementById('price-unit-input').value        = item.unit;
   document.getElementById('price-input').value             = item.total_paid || '';
   openModal('modal-price');
   setTimeout(() => document.getElementById('price-input').select(), 300);
 }
 
 async function confirmPrice() {
-  const val = parseFloat(document.getElementById('price-input').value);
+  const val  = parseFloat(document.getElementById('price-input').value);
   if (isNaN(val) || val < 0) { document.getElementById('price-input').focus(); return; }
+  const qty  = parseFloat(document.getElementById('price-qty-input').value) || 1;
+  const unit = document.getElementById('price-unit-input').value;
   closeModal('modal-price');
   showLoading();
   try {
     const res = await authFetch(`/api/items/${priceItemId}`, {
       method: 'PATCH',
-      body: JSON.stringify({ checked: true, total_paid: val })
+      body: JSON.stringify({ checked: true, total_paid: val, qty, unit })
     });
     if (!res) return;
     const updated = await res.json();
@@ -1251,23 +1276,29 @@ async function confirmPrice() {
 }
 
 // ===== DELETE ITEM =====
-function openDeleteModal(id) {
-  const item = activeList.find(i => i.id === id);
-  if (!item) return;
-  deleteItemId = id;
-  document.getElementById('delete-item-name').textContent = `"${item.name}" será removido da lista.`;
-  openModal('modal-delete');
-}
-
-async function deleteItem() {
-  closeModal('modal-delete');
+async function deleteItem(id) {
   showLoading();
   try {
-    const res = await authFetch(`/api/items/${deleteItemId}`, { method: 'DELETE' });
+    const res = await authFetch(`/api/items/${id}`, { method: 'DELETE' });
     if (!res) return;
-    activeList = activeList.filter(i => i.id !== deleteItemId);
+    activeList = activeList.filter(i => i.id !== id);
     renderList();
   } catch { showError('Erro ao remover item.'); } finally { hideLoading(); }
+}
+
+function openClearListModal() {
+  openModal('modal-clear-list');
+}
+
+async function clearList() {
+  closeModal('modal-clear-list');
+  showLoading();
+  try {
+    const res = await authFetch('/api/items', { method: 'DELETE' });
+    if (!res) return;
+    activeList = [];
+    renderList();
+  } catch { showError('Erro ao apagar lista.'); } finally { hideLoading(); }
 }
 
 // ===== FINISH TRIP =====

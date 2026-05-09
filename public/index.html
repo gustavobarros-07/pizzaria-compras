@@ -1055,15 +1055,6 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
 });
 
 // ===== KEYBOARD =====
-document.getElementById('add-name').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('add-qty').focus();
-});
-document.getElementById('add-qty').addEventListener('keydown', e => {
-  if (e.key === 'Enter') addItem();
-});
-document.getElementById('price-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') confirmPrice();
-});
 document.getElementById('login-password').addEventListener('keydown', e => {
   if (e.key === 'Enter') doLogin();
 });

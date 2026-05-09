@@ -177,6 +177,30 @@
           </button>
         </div>
       </div>
+      <div id="active-list-card" class="hidden">
+        <div class="bg-white rounded-2xl p-4 shadow-md mb-4 anim">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-semibold text-orange-600 uppercase tracking-wide">Lista ativa</span>
+            <span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-0.5 rounded-md" id="home-items-count">0 itens</span>
+          </div>
+          <div class="progress-bar mb-3">
+            <div class="progress-fill" id="home-progress" style="width:0%"></div>
+          </div>
+          <div class="flex items-baseline gap-2 mb-4">
+            <span class="text-gray-500 text-sm">Total parcial:</span>
+            <span class="text-2xl font-bold text-gray-800" id="home-partial-total">R$ 0,00</span>
+          </div>
+          <button class="btn-red" onclick="navigateTo('list')">Continuar Lista</button>
+        </div>
+      </div>
+      <div id="no-list-card" class="hidden">
+        <div class="bg-white rounded-2xl p-5 shadow-md mb-4 text-center anim">
+          <div class="text-4xl mb-2">🛒</div>
+          <h2 class="text-base font-bold text-gray-800 mb-1">Montar lista de compras</h2>
+          <p class="text-gray-500 text-sm mb-4">Selecione os itens da lista padrão para iniciar.</p>
+          <button class="btn-red" onclick="navigateTo('template')">Abrir Lista Padrão</button>
+        </div>
+      </div>
       <!-- Seletor de mês -->
       <div class="flex items-center justify-between bg-white rounded-2xl p-3 shadow-sm mb-3">
         <button onclick="prevMonth()" class="w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
@@ -216,6 +240,45 @@
       <div id="home-recent" class="hidden">
         <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Última compra</h3>
         <div class="trip-card" id="home-recent-trip" onclick="navigateTo('history')"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== LIST VIEW ===================== -->
+  <div id="view-list" class="view flex-1 pb-24 overflow-y-auto">
+    <div class="bg-red-600 text-white px-5 pt-12 pb-5 sticky top-0 z-20">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <button onclick="navigateTo('home')" class="text-red-200 font-medium flex items-center gap-1 text-sm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>Início
+          </button>
+          <button onclick="openClearListModal()" class="text-red-300 hover:text-white" title="Apagar lista">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+        <button onclick="openFinishModal()" id="btn-finish" class="bg-white text-red-600 font-bold text-sm px-4 py-2 rounded-xl">Finalizar ✓</button>
+      </div>
+      <h2 class="text-xl font-bold mb-2">Lista de Compras</h2>
+      <div class="flex items-center gap-3">
+        <div class="progress-bar flex-1"><div class="progress-fill" id="list-progress" style="width:0%"></div></div>
+        <span class="text-red-200 text-sm whitespace-nowrap" id="list-progress-text">0/0</span>
+      </div>
+    </div>
+    <div class="px-4 pt-4">
+      <div class="bg-white rounded-2xl p-4 mb-4 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs text-gray-400 font-medium">Total marcado</p>
+          <p class="text-2xl font-bold text-gray-800" id="list-total">R$ 0,00</p>
+        </div>
+        <div class="text-right">
+          <p class="text-xs text-gray-400 font-medium">Itens</p>
+          <p class="text-xl font-bold text-green-600" id="list-checked-count">0 ✓</p>
+        </div>
+      </div>
+      <div id="items-container"></div>
+      <div id="empty-list" class="text-center py-12 hidden">
+        <div class="text-5xl mb-3">📝</div>
+        <p class="text-gray-400 text-sm">Nenhum item na lista.</p>
       </div>
     </div>
   </div>
@@ -275,11 +338,18 @@
   <!-- ===================== TEMPLATE VIEW ===================== -->
   <div id="view-template" class="view flex-1 pb-24 overflow-y-auto">
     <div class="bg-red-600 text-white px-5 pt-12 pb-5 sticky top-0 z-20">
-      <h2 class="text-xl font-bold mb-1">Lista Padrão</h2>
-      <p class="text-red-200 text-sm">Gerencie os produtos da sua lista</p>
+      <div class="flex items-center justify-between mb-3">
+        <button onclick="navigateTo('home')" class="text-red-200 font-medium flex items-center gap-1 text-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>Início
+        </button>
+        <button id="template-edit-btn" onclick="toggleTemplateEditMode()"
+          class="text-white font-semibold text-sm px-3 py-1.5 rounded-xl bg-red-700">Editar lista</button>
+      </div>
+      <h2 class="text-xl font-bold" id="template-view-title">Lista Padrão</h2>
+      <p class="text-red-200 text-sm mt-1" id="template-view-subtitle">Selecione os itens para esta compra</p>
     </div>
     <div class="px-4 pt-4">
-      <!-- Filtros de categoria (apenas modo seleção) -->
+      <!-- Filtros de categoria -->
       <div id="template-filters" class="hidden mb-2">
         <div class="flex gap-2 overflow-x-auto pb-1">
           <button class="cat-chip" data-cat="" onclick="setTemplateFilter('')">Todos</button>
@@ -303,13 +373,22 @@
         <p class="text-gray-400 text-sm">Nenhum item na lista padrão.<br>Toque no <strong>+</strong> para adicionar.</p>
       </div>
     </div>
-    <button class="fab" id="template-fab" onclick="openAddTemplateModal()">+</button>
+    <div id="template-select-footer" class="hidden" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:28rem;padding:12px 16px 32px;background:white;border-top:1px solid #f3f4f6;z-index:40;">
+      <button onclick="toggleSelectAll()" id="btn-select-all"
+        class="w-full mb-2 py-2.5 rounded-xl text-sm font-semibold text-gray-600 bg-gray-100 border border-gray-200">
+        Selecionar tudo
+      </button>
+      <button class="btn-red" onclick="confirmTemplateSelect()" id="btn-confirm-template">
+        Adicionar 0 itens à lista
+      </button>
+    </div>
+    <button class="fab hidden" id="template-fab" onclick="openAddTemplateModal()">+</button>
   </div>
 
   <!-- ===================== STOCK VIEW ===================== -->
   <div id="view-stock" class="view flex-1 pb-24 overflow-y-auto">
     <div class="bg-red-600 text-white px-5 pt-12 pb-5 sticky top-0 z-20">
-      <div class="flex items-start justify-between">
+      <div class="flex items-start justify-between mb-3">
         <div>
           <h2 class="text-2xl font-bold">Estoque</h2>
           <p class="text-red-200 text-sm mt-1">Inventário da pizzaria</p>
@@ -317,6 +396,10 @@
         <button onclick="openHelp()" class="text-red-300 hover:text-white flex-shrink-0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
+      </div>
+      <div class="flex gap-2">
+        <button id="stock-sort-az"  onclick="setStockSort('az')"  class="cat-chip text-xs">A→Z</button>
+        <button id="stock-sort-cat" onclick="setStockSort('cat')" class="cat-chip text-xs">Por categoria</button>
       </div>
     </div>
     <div class="px-4 pt-4">
@@ -436,14 +519,6 @@
         <polyline points="9 22 9 12 15 12 15 22"/>
       </svg>Início
     </button>
-    <button class="nav-btn" id="nav-template" onclick="navigateTo('template')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
-        <line x1="8" y1="18" x2="21" y2="18"/>
-        <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/>
-        <line x1="3" y1="18" x2="3.01" y2="18"/>
-      </svg>Padrão
-    </button>
     <button class="nav-btn" id="nav-history" onclick="navigateTo('history')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"/>
@@ -474,6 +549,72 @@
 
   <!-- ===================== MODALS ===================== -->
 
+  <!-- Set Price -->
+  <div id="modal-price" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold" id="price-modal-title">—</h3>
+        <button onclick="closeModal('modal-price')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
+      </div>
+      <div class="flex gap-2 mb-4">
+        <div style="flex:1">
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Quantidade</label>
+          <input type="number" id="price-qty-input" min="0.01" step="0.01" class="text-center font-bold" />
+        </div>
+        <div style="flex:1">
+          <label class="block text-xs font-semibold text-gray-500 mb-1">Unidade</label>
+          <select id="price-unit-input">
+            <option value="un">un</option><option value="kg">kg</option><option value="g">g</option>
+            <option value="L">L</option><option value="ml">ml</option><option value="cx">cx</option><option value="pct">pct</option>
+          </select>
+        </div>
+      </div>
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Preço total pago (R$)</label>
+        <input type="number" id="price-input" placeholder="0,00" min="0" step="0.01" class="text-2xl font-bold text-center" />
+      </div>
+      <div class="flex gap-3">
+        <button class="btn-outline" style="flex:1" onclick="closeModal('modal-price')">Cancelar</button>
+        <button class="btn-red" style="flex:2" onclick="confirmPrice()">Confirmar ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Finish Trip -->
+  <div id="modal-finish" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <div class="text-center mb-4">
+        <div class="text-4xl mb-2">🎉</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Finalizar compra?</h3>
+        <p class="text-gray-400 text-sm" id="finish-summary">—</p>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-4 mb-4 text-center">
+        <p class="text-gray-400 text-sm">Total da compra</p>
+        <p class="text-3xl font-bold text-red-600" id="finish-total">R$ 0,00</p>
+      </div>
+      <div class="mb-5">
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do mercado</label>
+        <input type="text" id="finish-store" placeholder="Ex: Atacadão, Assaí, BH..." autocomplete="off" />
+      </div>
+      <div class="flex gap-3">
+        <button class="btn-outline" style="flex:1" onclick="closeModal('modal-finish')">Voltar</button>
+        <button class="btn-red" style="flex:2" id="btn-confirm-finish" onclick="finishTrip()">Salvar compra</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear List -->
+  <div id="modal-clear-list" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <h3 class="text-lg font-bold mb-2">Apagar lista?</h3>
+      <p class="text-gray-400 text-sm mb-5">Todos os itens serão removidos. Essa ação não pode ser desfeita.</p>
+      <div class="flex gap-3">
+        <button class="btn-outline" style="flex:1" onclick="closeModal('modal-clear-list')">Cancelar</button>
+        <button class="btn-red" style="flex:2;background:#ef4444" onclick="clearList()">Apagar tudo</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Add Stock Item -->
   <div id="modal-add-stock" class="modal-overlay hidden">
     <div class="modal-sheet">
@@ -483,7 +624,7 @@
       </div>
       <div class="mb-4">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do produto</label>
-        <input type="text" id="stock-add-name" placeholder="Ex: Mozzarella" autocomplete="off" />
+        <input type="text" id="stock-add-name" placeholder="Ex: Mozzarella" autocomplete="off" oninput="autoFillCategory('stock-add-category',this.value)" />
       </div>
       <div class="grid grid-cols-2 gap-3 mb-3">
         <div>
@@ -600,7 +741,7 @@
       </div>
       <div class="mb-4">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do produto</label>
-        <input type="text" id="tmpl-add-name" placeholder="Ex: Farinha de trigo" autocomplete="off" />
+        <input type="text" id="tmpl-add-name" placeholder="Ex: Farinha de trigo" autocomplete="off" oninput="autoFillCategory('tmpl-add-category',this.value)" />
       </div>
       <div class="grid grid-cols-2 gap-3 mb-5">
         <div>
@@ -800,8 +941,10 @@ async function saveCredentials() {
 }
 
 // ===== STATE =====
-let trips       = [];
+let activeList   = [];
+let trips        = [];
 let analyticsMonth = new Date().toISOString().slice(0, 7);
+let priceItemId  = null;
 let currentView  = '';
 
 // ===== NAVIGATION =====
@@ -817,6 +960,7 @@ function navigateTo(view) {
   currentView = view;
 
   if (view === 'home')     loadHome();
+  if (view === 'list')     loadList();
   if (view === 'history')  loadHistory();
   if (view === 'stock')    loadStock();
   if (view === 'template') loadTemplate();
@@ -835,13 +979,15 @@ async function loadHome() {
   });
   showLoading();
   try {
-    const [tripsRes, stockRes] = await Promise.all([
+    const [itemsRes, tripsRes, stockRes] = await Promise.all([
+      authFetch('/api/items'),
       authFetch('/api/trips'),
       authFetch('/api/stock')
     ]);
-    if (!tripsRes || !stockRes) return;
-    trips     = await tripsRes.json();
-    stockList = await stockRes.json();
+    if (!itemsRes || !tripsRes || !stockRes) return;
+    activeList = await itemsRes.json();
+    trips      = await tripsRes.json();
+    stockList  = await stockRes.json();
     renderHome();
     loadAnalytics();
   } catch { showError('Erro ao carregar dados.'); } finally { hideLoading(); }
@@ -859,6 +1005,18 @@ function renderHome() {
       </div>
     `).join('');
   }
+  const hasItems = activeList.length > 0;
+  document.getElementById('active-list-card').classList.toggle('hidden', !hasItems);
+  document.getElementById('no-list-card').classList.toggle('hidden', hasItems);
+  if (hasItems) {
+    const checked = activeList.filter(i => i.checked).length;
+    const pct     = Math.round((checked / activeList.length) * 100);
+    const partial = activeList.filter(i => i.checked).reduce((s, i) => s + (i.total_paid || 0), 0);
+    document.getElementById('home-items-count').textContent   = activeList.length + (activeList.length === 1 ? ' item' : ' itens');
+    document.getElementById('home-progress').style.width      = pct + '%';
+    document.getElementById('home-partial-total').textContent = fmtBRL(partial);
+  }
+
   const recentEl = document.getElementById('home-recent');
   if (trips.length > 0) {
     recentEl.classList.remove('hidden');
@@ -1058,9 +1216,174 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
 document.getElementById('login-password').addEventListener('keydown', e => {
   if (e.key === 'Enter') doLogin();
 });
+document.getElementById('price-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmPrice();
+});
+
+// ===== LIST =====
+async function loadList() {
+  showLoading();
+  try {
+    const res = await authFetch('/api/items');
+    if (!res) return;
+    activeList = await res.json();
+    renderList();
+  } catch { showError('Erro ao carregar lista.'); } finally { hideLoading(); }
+}
+
+function renderList() {
+  const total   = activeList.filter(i => i.checked).reduce((s, i) => s + (i.total_paid || 0), 0);
+  const checked = activeList.filter(i => i.checked).length;
+  const n       = activeList.length;
+  const pct     = n ? Math.round((checked / n) * 100) : 0;
+  document.getElementById('list-total').textContent         = fmtBRL(total);
+  document.getElementById('list-checked-count').textContent = checked + ' ✓';
+  document.getElementById('list-progress').style.width      = pct + '%';
+  document.getElementById('list-progress-text').textContent = `${checked}/${n}`;
+  document.getElementById('empty-list').classList.toggle('hidden', n > 0);
+  const sorted = [...activeList].sort((a, b) => a.checked - b.checked);
+  document.getElementById('items-container').innerHTML = sorted.map(itemRowHTML).join('');
+}
+
+function itemRowHTML(item) {
+  const icon  = item.checked
+    ? `<div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">✓</div>`
+    : `<div class="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center text-red-300 text-lg">○</div>`;
+  const price = item.checked
+    ? `<span class="text-green-600 font-bold text-sm">${fmtBRL(item.total_paid)}</span>`
+    : `<span class="text-gray-300 text-sm">—</span>`;
+  return `
+    <div class="item-row ${item.checked ? 'checked' : ''}" onclick="openPriceModal('${item.id}')">
+      <div class="flex items-center gap-3">
+        ${icon}
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
+          <p class="text-xs text-gray-400">${item.qty} ${item.unit}</p>
+        </div>
+        <div class="text-right mr-1">${price}</div>
+        <button onclick="event.stopPropagation();deleteItem('${item.id}')"
+          class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+      </div>
+    </div>`;
+}
+
+function openPriceModal(id) {
+  const item = activeList.find(i => i.id === id);
+  if (!item) return;
+  priceItemId = id;
+  document.getElementById('price-modal-title').textContent = item.name;
+  document.getElementById('price-qty-input').value         = item.qty;
+  document.getElementById('price-unit-input').value        = item.unit;
+  document.getElementById('price-input').value             = item.total_paid || '';
+  openModal('modal-price');
+  setTimeout(() => document.getElementById('price-input').select(), 300);
+}
+
+async function confirmPrice() {
+  const val  = parseFloat(document.getElementById('price-input').value);
+  if (isNaN(val) || val < 0) { document.getElementById('price-input').focus(); return; }
+  const qty  = parseFloat(document.getElementById('price-qty-input').value) || 1;
+  const unit = document.getElementById('price-unit-input').value;
+  closeModal('modal-price');
+  showLoading();
+  try {
+    const res = await authFetch(`/api/items/${priceItemId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ checked: true, total_paid: val, qty, unit })
+    });
+    if (!res) return;
+    const updated = await res.json();
+    const idx = activeList.findIndex(i => i.id === priceItemId);
+    if (idx !== -1) activeList[idx] = updated;
+    renderList();
+  } catch { showError('Erro ao salvar preço.'); } finally { hideLoading(); }
+}
+
+async function deleteItem(id) {
+  showLoading();
+  try {
+    const res = await authFetch(`/api/items/${id}`, { method: 'DELETE' });
+    if (!res) return;
+    activeList = activeList.filter(i => i.id !== id);
+    renderList();
+  } catch { showError('Erro ao remover item.'); } finally { hideLoading(); }
+}
+
+function openClearListModal() { openModal('modal-clear-list'); }
+
+async function clearList() {
+  closeModal('modal-clear-list');
+  showLoading();
+  try {
+    const res = await authFetch('/api/items', { method: 'DELETE' });
+    if (!res) return;
+    activeList = [];
+    renderList();
+  } catch { showError('Erro ao apagar lista.'); } finally { hideLoading(); }
+}
+
+function openFinishModal() {
+  if (activeList.length === 0) return;
+  const checked = activeList.filter(i => i.checked).length;
+  const total   = activeList.filter(i => i.checked).reduce((s, i) => s + (i.total_paid || 0), 0);
+  const n = activeList.length;
+  document.getElementById('finish-summary').textContent =
+    `${checked} de ${n} ite${n > 1 ? 'ns' : 'm'} marcado${checked !== 1 ? 's' : ''}`;
+  document.getElementById('finish-total').textContent = fmtBRL(total);
+  document.getElementById('finish-store').value = '';
+  openModal('modal-finish');
+  setTimeout(() => document.getElementById('finish-store').focus(), 300);
+}
+
+async function finishTrip() {
+  const store_name = document.getElementById('finish-store').value.trim();
+  document.getElementById('btn-confirm-finish').disabled = true;
+  try {
+    const res = await authFetch('/api/trips', {
+      method: 'POST',
+      body: JSON.stringify({ store_name })
+    });
+    if (!res) return;
+    if (!res.ok) { showError('Nenhum item marcado para finalizar.'); return; }
+    activeList = [];
+    closeModal('modal-finish');
+    navigateTo('history');
+  } catch {
+    showError('Erro ao finalizar compra.');
+  } finally {
+    document.getElementById('btn-confirm-finish').disabled = false;
+  }
+}
+
+// ===== AUTO-CATEGORIZAÇÃO =====
+const CAT_KEYWORDS = {
+  carne:      ['carne','frango','peito','coxa','asa','peixe','atum','salmão','bacon','presunto','salame','pepperoni','linguiça','calabresa','hamburguer','costela','picanha','alcatra','filé','bife','patinho','músculo','pernil','lombo','bisteca','contrafilé','cupim'],
+  laticinios: ['queijo','mozzarella','muçarela','requeijão','manteiga','margarina','leite','nata','creme de leite','iogurte','parmesão','ricota','catupiry','cream cheese','provolone','coalho','gorgonzola','brie','gouda','prato','cheddar'],
+  doces:      ['açúcar','chocolate','doce','nutella','baunilha','sorvete','mousse','geleia','mel','calda','brigadeiro','achocolatado','leite condensado','confeiteiro','granulado','cobertura'],
+  bebidas:    ['água','suco','refrigerante','cerveja','vinho','coca','sprite','guaraná','energético','café','chá','bebida','vodka','whisky','rum','pinga','cachaça','isotônico','leite de coco'],
+  limpeza:    ['detergente','sabão','esponja','vassoura','rodo','pano','papel toalha','desinfetante','álcool','cloro','limpador','desengordurante','sanitizante','luva','saco de lixo','multiuso','amaciante','sabonete','sabão em pó','higienizante'],
+};
+
+function guessCategoryFromName(name) {
+  const lower = name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  for (const [cat, keywords] of Object.entries(CAT_KEYWORDS)) {
+    for (const kw of keywords) {
+      const kwNorm = kw.normalize('NFD').replace(/[̀-ͯ]/g, '');
+      if (lower.includes(kwNorm)) return cat;
+    }
+  }
+  return '';
+}
+
+function autoFillCategory(selectId, name) {
+  const cat = guessCategoryFromName(name);
+  if (cat) document.getElementById(selectId).value = cat;
+}
 
 // ===== TEMPLATE =====
-let templateList = [];
+let templateList    = [];
+let templateEditMode = false;
+let templateChecked  = new Set();
 let editTemplateItemId = null;
 let templateCategoryFilter = '';
 let templateSortMode = 'az';
@@ -1091,7 +1414,9 @@ async function loadTemplate() {
   try {
     const res = await authFetch('/api/template');
     if (!res) return;
-    templateList = await res.json();
+    templateList    = await res.json();
+    templateChecked = new Set(templateList.map(i => i.id));
+    templateEditMode = false;
     templateCategoryFilter = '';
     templateSortMode = 'az';
     renderTemplate();
@@ -1101,68 +1426,145 @@ async function loadTemplate() {
 function renderTemplate() {
   const emptyEl   = document.getElementById('empty-template');
   const fab       = document.getElementById('template-fab');
+  const footer    = document.getElementById('template-select-footer');
   const filtersEl = document.getElementById('template-filters');
+  const editBtn   = document.getElementById('template-edit-btn');
+  const title     = document.getElementById('template-view-title');
+  const subtitle  = document.getElementById('template-view-subtitle');
 
   emptyEl.classList.toggle('hidden', templateList.length > 0);
-  fab.classList.remove('hidden');
-  filtersEl.classList.toggle('hidden', templateList.length === 0);
 
-  document.querySelectorAll('#template-filters .cat-chip[data-cat]').forEach(btn => {
-    const chipCat = btn.dataset.cat;
-    const isActive = chipCat === templateCategoryFilter;
-    const c = isActive ? CAT_CHIP_ACTIVE[chipCat] : CAT_CHIP_INACTIVE[chipCat];
-    if (c) { btn.style.background = c.bg; btn.style.color = c.color; btn.style.borderColor = c.border; }
-  });
-  ['az','za','cat'].forEach(m => {
-    const btn = document.getElementById('sort-' + m);
-    if (!btn) return;
-    if (m === templateSortMode) {
-      btn.style.background = '#1e293b'; btn.style.color = '#fff'; btn.style.borderColor = '#1e293b';
-    } else {
-      btn.style.background = '#f1f5f9'; btn.style.color = '#64748b'; btn.style.borderColor = '#e2e8f0';
-    }
-  });
+  if (templateEditMode) {
+    footer.classList.add('hidden');
+    fab.classList.remove('hidden');
+    filtersEl.classList.add('hidden');
+    editBtn.textContent  = 'Concluir';
+    title.textContent    = 'Editar Lista Padrão';
+    subtitle.textContent = 'Adicione, edite ou remova itens';
+  } else {
+    footer.classList.toggle('hidden', templateList.length === 0);
+    fab.classList.add('hidden');
+    filtersEl.classList.toggle('hidden', templateList.length === 0);
+    editBtn.textContent  = 'Editar lista';
+    title.textContent    = 'Lista Padrão';
+    subtitle.textContent = 'Selecione os itens para esta compra';
+    document.querySelectorAll('#template-filters .cat-chip[data-cat]').forEach(btn => {
+      const chipCat = btn.dataset.cat;
+      const isActive = chipCat === templateCategoryFilter;
+      const c = isActive ? CAT_CHIP_ACTIVE[chipCat] : CAT_CHIP_INACTIVE[chipCat];
+      if (c) { btn.style.background = c.bg; btn.style.color = c.color; btn.style.borderColor = c.border; }
+    });
+    ['az','za','cat'].forEach(m => {
+      const btn = document.getElementById('sort-' + m);
+      if (!btn) return;
+      if (m === templateSortMode) {
+        btn.style.background = '#1e293b'; btn.style.color = '#fff'; btn.style.borderColor = '#1e293b';
+      } else {
+        btn.style.background = '#f1f5f9'; btn.style.color = '#64748b'; btn.style.borderColor = '#e2e8f0';
+      }
+    });
+    updateTemplateFooterCount();
+  }
 
   let visibleItems;
-  if (templateCategoryFilter === 'semcat') {
+  if (!templateEditMode && templateCategoryFilter === 'semcat') {
     visibleItems = templateList.filter(i => !i.category);
-  } else if (templateCategoryFilter) {
+  } else if (!templateEditMode && templateCategoryFilter) {
     visibleItems = templateList.filter(i => i.category === templateCategoryFilter);
   } else {
     visibleItems = [...templateList];
   }
 
-  if (templateSortMode === 'za') {
-    visibleItems.sort((a, b) => b.name.localeCompare(a.name, 'pt-BR'));
-  } else if (templateSortMode === 'cat') {
-    visibleItems.sort((a, b) => (a.category || 'zzz').localeCompare(b.category || 'zzz', 'pt-BR') || a.name.localeCompare(b.name, 'pt-BR'));
-  } else {
-    visibleItems.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  if (!templateEditMode) {
+    if (templateSortMode === 'za') visibleItems.sort((a, b) => b.name.localeCompare(a.name, 'pt-BR'));
+    else if (templateSortMode === 'cat') visibleItems.sort((a, b) => (a.category || 'zzz').localeCompare(b.category || 'zzz', 'pt-BR') || a.name.localeCompare(b.name, 'pt-BR'));
+    else visibleItems.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
   }
 
   const CAT_LABEL = { carne: 'Carne', laticinios: 'Laticínios', doces: 'Doces', bebidas: 'Bebidas', limpeza: 'Limpeza', outros: 'Outros' };
 
-  if (visibleItems.length === 0 && templateList.length > 0) {
+  if (!templateEditMode && visibleItems.length === 0 && templateList.length > 0) {
     document.getElementById('template-container').innerHTML = `
-      <div class="text-center py-10">
-        <div class="text-4xl mb-3">🔍</div>
-        <p class="text-gray-500 text-sm">Nenhum item nesta categoria.</p>
-      </div>`;
+      <div class="text-center py-10"><div class="text-4xl mb-3">🔍</div>
+      <p class="text-gray-500 text-sm">Nenhum item nesta categoria.</p></div>`;
     return;
   }
 
   document.getElementById('template-container').innerHTML = visibleItems.map(item => {
     const label = CAT_LABEL[item.category] || '';
+    if (templateEditMode) {
+      return `
+        <div class="item-row ${item.category ? 'cat-' + item.category : ''} flex items-center gap-3" onclick="openEditTemplateModal('${item.id}')">
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
+            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' · ' + label : ''}</p>
+          </div>
+          <button onclick="event.stopPropagation();deleteTemplateItem('${item.id}')"
+            class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+        </div>`;
+    }
+    const checked = templateChecked.has(item.id);
     return `
-      <div class="item-row ${item.category ? 'cat-' + item.category : ''} flex items-center gap-3" onclick="openEditTemplateModal('${item.id}')">
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
-          <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' · ' + label : ''}</p>
+      <div class="item-row ${checked ? 'checked' : (item.category ? 'cat-' + item.category : '')}" onclick="toggleTemplateItem('${item.id}')">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0
+            ${checked ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-300'}">${checked ? '✓' : '○'}</div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
+            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' · ' + label : ''}</p>
+          </div>
         </div>
-        <button onclick="event.stopPropagation();deleteTemplateItem('${item.id}')"
-          class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
       </div>`;
   }).join('');
+}
+
+function toggleTemplateItem(id) {
+  templateChecked.has(id) ? templateChecked.delete(id) : templateChecked.add(id);
+  renderTemplate();
+}
+
+function updateTemplateFooterCount() {
+  const count = templateChecked.size;
+  document.getElementById('btn-confirm-template').textContent =
+    `Adicionar ${count} ite${count !== 1 ? 'ns' : 'm'} à lista`;
+}
+
+function toggleSelectAll() {
+  let visibleItems;
+  if (templateCategoryFilter === 'semcat') visibleItems = templateList.filter(i => !i.category);
+  else if (templateCategoryFilter) visibleItems = templateList.filter(i => i.category === templateCategoryFilter);
+  else visibleItems = templateList;
+  const ids = visibleItems.map(i => i.id);
+  const allSel = ids.every(id => templateChecked.has(id));
+  ids.forEach(id => allSel ? templateChecked.delete(id) : templateChecked.add(id));
+  document.getElementById('btn-select-all').textContent = allSel ? 'Selecionar tudo' : 'Desmarcar tudo';
+  renderTemplate();
+}
+
+function toggleTemplateEditMode() {
+  templateEditMode = !templateEditMode;
+  renderTemplate();
+}
+
+async function confirmTemplateSelect() {
+  const selected = templateList.filter(i => templateChecked.has(i.id));
+  if (selected.length === 0) return;
+  if (stockList.length === 0) {
+    const res = await authFetch('/api/stock');
+    if (res) stockList = await res.json();
+  }
+  showLoading();
+  try {
+    for (const item of selected) {
+      const match = stockList.find(s => s.name.toLowerCase() === item.name.toLowerCase());
+      const unit  = match ? match.unit : item.unit;
+      await authFetch('/api/items', {
+        method: 'POST',
+        body: JSON.stringify({ name: item.name, qty: item.qty, unit })
+      });
+    }
+    navigateTo('list');
+  } catch { showError('Erro ao adicionar itens à lista.'); } finally { hideLoading(); }
 }
 
 function setTemplateFilter(cat) {
@@ -1260,6 +1662,7 @@ let currentTripData = null;
 let stockList = [];
 let stockItemId = null;
 let stockAdjType = 'entrada';
+let stockSortMode = 'az';
 
 async function loadStock() {
   showLoading();
@@ -1267,14 +1670,35 @@ async function loadStock() {
     const res = await authFetch('/api/stock');
     if (!res) return;
     stockList = await res.json();
+    document.getElementById('stock-sort-az').classList.toggle('active', stockSortMode === 'az');
+    document.getElementById('stock-sort-cat').classList.toggle('active', stockSortMode === 'cat');
     renderStock();
   } catch { showError('Erro ao carregar estoque.'); } finally { hideLoading(); }
+}
+
+function setStockSort(mode) {
+  stockSortMode = mode;
+  const CAT_ORDER = ['carne','laticinios','doces','bebidas','limpeza','outros',''];
+  document.getElementById('stock-sort-az').classList.toggle('active', mode === 'az');
+  document.getElementById('stock-sort-cat').classList.toggle('active', mode === 'cat');
+  renderStock();
 }
 
 function renderStock() {
   const emptyEl = document.getElementById('empty-stock');
   emptyEl.classList.toggle('hidden', stockList.length > 0);
-  document.getElementById('stock-container').innerHTML = stockList.map(s => {
+  const CAT_ORDER = ['carne','laticinios','doces','bebidas','limpeza','outros',''];
+  const sorted = [...stockList].sort((a, b) => {
+    if (stockSortMode === 'cat') {
+      const ai = CAT_ORDER.indexOf(a.category || '');
+      const bi = CAT_ORDER.indexOf(b.category || '');
+      const oa = ai === -1 ? CAT_ORDER.length : ai;
+      const ob = bi === -1 ? CAT_ORDER.length : bi;
+      if (oa !== ob) return oa - ob;
+    }
+    return a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' });
+  });
+  document.getElementById('stock-container').innerHTML = sorted.map(s => {
     const low = s.min_qty > 0 && s.qty < s.min_qty;
     const catClass = (!low && s.category) ? `cat-${s.category}` : '';
     const lowBorder = low ? 'border-l-4 border-orange-400' : '';
@@ -1318,7 +1742,6 @@ async function saveNewStockItem() {
     if (!res) return;
     const item = await res.json();
     stockList.push(item);
-    stockList.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
     renderStock();
   } catch { showError('Erro ao adicionar item.'); } finally { hideLoading(); }
 }

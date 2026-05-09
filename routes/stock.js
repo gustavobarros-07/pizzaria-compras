@@ -14,10 +14,22 @@ router.post('/', (req, res) => {
   const { name, qty, unit, min_qty, category = '' } = req.body;
   if (!name) return res.status(400).json({ error: 'Nome obrigatório' });
 
-  const id = randomUUID();
-  db.prepare(
-    'INSERT INTO stock_items (id, name, qty, unit, category, min_qty) VALUES (?, ?, ?, ?, ?, ?)'
-  ).run(id, name, qty ?? 0, unit || 'un', category, min_qty ?? 0);
+  const id   = randomUUID();
+  const unit_ = unit || 'un';
+  db.transaction(() => {
+    db.prepare(
+      'INSERT INTO stock_items (id, name, qty, unit, category, min_qty) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(id, name, qty ?? 0, unit_, category, min_qty ?? 0);
+
+    const exists = db.prepare(
+      'SELECT id FROM template_items WHERE LOWER(name) = LOWER(?)'
+    ).get(name);
+    if (!exists) {
+      db.prepare(
+        'INSERT INTO template_items (id, name, qty, unit, category) VALUES (?, ?, ?, ?, ?)'
+      ).run(randomUUID(), name, 1, unit_, category);
+    }
+  })();
 
   res.status(201).json(db.prepare('SELECT * FROM stock_items WHERE id = ?').get(id));
 });

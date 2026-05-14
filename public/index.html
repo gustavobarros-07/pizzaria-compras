@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -135,18 +135,18 @@
   <!-- ===================== LOGIN VIEW ===================== -->
   <div id="view-login" class="view flex-1">
     <div class="bg-red-600 text-white px-5 pt-14 pb-8 text-center">
-      <div class="text-5xl mb-3">🍕</div>
+      <div class="text-5xl mb-3">ðŸ•</div>
       <h1 class="text-2xl font-bold">Compras da Pizzaria</h1>
       <p class="text-red-200 text-sm mt-1">Entre para continuar</p>
     </div>
     <div class="px-5 pt-8 pb-10 flex-1 overflow-y-auto">
       <div class="mb-4">
-        <label class="block text-sm font-semibold text-gray-600 mb-1">Usuário</label>
+        <label class="block text-sm font-semibold text-gray-600 mb-1">UsuÃ¡rio</label>
         <input type="text" id="login-username" placeholder="admin" autocomplete="username" />
       </div>
       <div class="mb-6">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Senha</label>
-        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+        <input type="password" id="login-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" autocomplete="current-password" />
       </div>
       <button class="btn-red" onclick="doLogin()">Entrar</button>
       <p class="text-center text-xs text-red-500 mt-3" id="login-error"></p>
@@ -158,7 +158,7 @@
     <div class="bg-red-600 text-white px-5 pt-12 pb-8">
       <div class="flex items-start justify-between">
         <div>
-          <p class="text-red-200 text-sm font-medium mb-1">Bem-vindo 👋</p>
+          <p class="text-red-200 text-sm font-medium mb-1">Bem-vindo ðŸ‘‹</p>
           <h1 class="text-2xl font-bold">Compras da Pizzaria</h1>
           <p class="text-red-200 text-sm mt-1" id="home-date"></p>
         </div>
@@ -170,10 +170,10 @@
     <div class="px-5 -mt-4">
       <div id="critical-stock-card" class="hidden">
         <div class="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-4 anim">
-          <p class="text-xs font-semibold text-orange-600 uppercase tracking-wide mb-2">⚠️ Estoque crítico</p>
+          <p class="text-xs font-semibold text-orange-600 uppercase tracking-wide mb-2">âš ï¸ Estoque crÃ­tico</p>
           <div id="critical-stock-list"></div>
           <button onclick="navigateTo('stock')" class="text-orange-600 text-sm font-semibold mt-2">
-            Ver estoque completo →
+            Ver estoque completo â†’
           </button>
         </div>
       </div>
@@ -195,50 +195,50 @@
       </div>
       <div id="no-list-card" class="hidden">
         <div class="bg-white rounded-2xl p-5 shadow-md mb-4 text-center anim">
-          <div class="text-4xl mb-2">🛒</div>
+          <div class="text-4xl mb-2">ðŸ›’</div>
           <h2 class="text-base font-bold text-gray-800 mb-1">Montar lista de compras</h2>
-          <p class="text-gray-500 text-sm mb-4">Selecione os itens da lista padrão para iniciar.</p>
-          <button class="btn-red" onclick="navigateTo('template')">Abrir Lista Padrão</button>
+          <p class="text-gray-500 text-sm mb-4">Selecione os itens da lista padrÃ£o para iniciar.</p>
+          <button class="btn-red" onclick="navigateTo('template')">Abrir Lista PadrÃ£o</button>
         </div>
       </div>
-      <!-- Seletor de mês -->
+      <!-- Seletor de mÃªs -->
       <div class="flex items-center justify-between bg-white rounded-2xl p-3 shadow-sm mb-3">
         <button onclick="prevMonth()" class="w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <span class="text-sm font-semibold text-gray-700 capitalize" id="analytics-month-label">—</span>
+        <span class="text-sm font-semibold text-gray-700 capitalize" id="analytics-month-label">â€”</span>
         <button onclick="nextMonth()" id="btn-next-month" class="w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M9 18l6-6-6-6"/></svg>
         </button>
       </div>
 
-      <!-- Cards de estatística -->
+      <!-- Cards de estatÃ­stica -->
       <div class="grid grid-cols-3 gap-2 mb-3">
         <div class="rounded-2xl p-3 text-center" style="background:linear-gradient(135deg,#eff6ff,#dbeafe)">
-          <p class="text-xl font-bold text-blue-700" id="stat-trips">—</p>
+          <p class="text-xl font-bold text-blue-700" id="stat-trips">â€”</p>
           <p class="text-blue-500 text-xs mt-0.5 leading-tight">Idas ao mercado</p>
         </div>
         <div class="rounded-2xl p-3 text-center" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7)">
-          <p class="text-base font-bold text-green-700 leading-tight" id="stat-total">—</p>
+          <p class="text-base font-bold text-green-700 leading-tight" id="stat-total">â€”</p>
           <p class="text-green-500 text-xs mt-0.5 leading-tight">Total gasto</p>
         </div>
         <div class="rounded-2xl p-3 text-center" style="background:linear-gradient(135deg,#fff7ed,#fed7aa)">
-          <p class="text-base font-bold text-orange-700 leading-tight" id="stat-avg">—</p>
-          <p class="text-orange-500 text-xs mt-0.5 leading-tight">Ticket médio</p>
+          <p class="text-base font-bold text-orange-700 leading-tight" id="stat-avg">â€”</p>
+          <p class="text-orange-500 text-xs mt-0.5 leading-tight">Ticket mÃ©dio</p>
         </div>
       </div>
 
       <!-- Top produtos -->
       <div id="home-top-products" class="hidden mb-3">
-        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Top produtos do mês</h3>
+        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Top produtos do mÃªs</h3>
         <div class="bg-white rounded-2xl p-4 shadow-sm">
           <div id="home-top-list"></div>
         </div>
       </div>
 
-      <!-- Última compra -->
+      <!-- Ãšltima compra -->
       <div id="home-recent" class="hidden">
-        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Última compra</h3>
+        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Ãšltima compra</h3>
         <div class="trip-card" id="home-recent-trip" onclick="navigateTo('history')"></div>
       </div>
     </div>
@@ -250,13 +250,13 @@
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-3">
           <button onclick="navigateTo('home')" class="text-red-200 font-medium flex items-center gap-1 text-sm">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>Início
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>InÃ­cio
           </button>
           <button onclick="openClearListModal()" class="text-red-300 hover:text-white" title="Apagar lista">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
           </button>
         </div>
-        <button onclick="openFinishModal()" id="btn-finish" class="bg-white text-red-600 font-bold text-sm px-4 py-2 rounded-xl">Finalizar ✓</button>
+        <button onclick="openFinishModal()" id="btn-finish" class="bg-white text-red-600 font-bold text-sm px-4 py-2 rounded-xl">Finalizar âœ“</button>
       </div>
       <h2 class="text-xl font-bold mb-2">Lista de Compras</h2>
       <div class="flex items-center gap-3">
@@ -272,12 +272,12 @@
         </div>
         <div class="text-right">
           <p class="text-xs text-gray-400 font-medium">Itens</p>
-          <p class="text-xl font-bold text-green-600" id="list-checked-count">0 ✓</p>
+          <p class="text-xl font-bold text-green-600" id="list-checked-count">0 âœ“</p>
         </div>
       </div>
       <div id="items-container"></div>
       <div id="empty-list" class="text-center py-12 hidden">
-        <div class="text-5xl mb-3">📝</div>
+        <div class="text-5xl mb-3">ðŸ“</div>
         <p class="text-gray-400 text-sm">Nenhum item na lista.</p>
       </div>
     </div>
@@ -288,7 +288,7 @@
     <div class="bg-red-600 text-white px-5 pt-12 pb-6">
       <div class="flex items-start justify-between">
         <div>
-          <h2 class="text-2xl font-bold">Histórico</h2>
+          <h2 class="text-2xl font-bold">HistÃ³rico</h2>
           <p class="text-red-200 text-sm mt-1">Todas as idas ao mercado</p>
         </div>
         <button onclick="openHelp()" class="text-red-300 hover:text-white flex-shrink-0">
@@ -299,7 +299,7 @@
     <div class="px-4 pt-4">
       <div id="history-list"></div>
       <div id="empty-history" class="text-center py-16 hidden">
-        <div class="text-5xl mb-3">📦</div>
+        <div class="text-5xl mb-3">ðŸ“¦</div>
         <p class="text-gray-400">Nenhuma compra finalizada ainda.</p>
       </div>
     </div>
@@ -309,10 +309,10 @@
   <div id="view-trip" class="view flex-1 pb-20 overflow-y-auto">
     <div class="bg-red-600 text-white px-5 pt-12 pb-6 sticky top-0 z-20">
       <button onclick="navigateTo('history')" class="text-red-200 font-medium flex items-center gap-1 text-sm mb-3">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>Histórico
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>HistÃ³rico
       </button>
-      <h2 class="text-xl font-bold" id="trip-detail-date">—</h2>
-      <p class="text-red-200 text-sm" id="trip-detail-count">—</p>
+      <h2 class="text-xl font-bold" id="trip-detail-date">â€”</h2>
+      <p class="text-red-200 text-sm" id="trip-detail-count">â€”</p>
     </div>
     <div class="px-4 pt-4">
       <div class="rounded-2xl p-5 mb-3 text-white text-center shadow-lg" style="background:linear-gradient(135deg,#dc2626,#b91c1c)">
@@ -321,13 +321,13 @@
         <p class="text-red-300 text-sm mt-1" id="trip-detail-store"></p>
       </div>
       <div class="flex gap-3 mb-4">
-        <button onclick="openEditTripModal()"
+        <button id="trip-edit-btn" onclick="openEditTripModal()"
           class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-blue-50 text-blue-600 border border-blue-200">
-          ✏️ Editar
+          âœï¸ Editar
         </button>
-        <button onclick="confirmDeleteTrip()"
+        <button id="trip-delete-btn" onclick="confirmDeleteTrip()"
           class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-red-50 text-red-500 border border-red-200">
-          🗑️ Excluir
+          ðŸ—‘ï¸ Excluir
         </button>
       </div>
       <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Itens comprados</h3>
@@ -340,12 +340,12 @@
     <div class="bg-red-600 text-white px-5 pt-12 pb-5 sticky top-0 z-20">
       <div class="flex items-center justify-between mb-3">
         <button onclick="navigateTo('home')" class="text-red-200 font-medium flex items-center gap-1 text-sm">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>Início
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-4 h-4"><path d="M15 18l-6-6 6-6"/></svg>InÃ­cio
         </button>
         <button id="template-edit-btn" onclick="toggleTemplateEditMode()"
           class="text-white font-semibold text-sm px-3 py-1.5 rounded-xl bg-red-700">Editar lista</button>
       </div>
-      <h2 class="text-xl font-bold" id="template-view-title">Lista Padrão</h2>
+      <h2 class="text-xl font-bold" id="template-view-title">Lista PadrÃ£o</h2>
       <p class="text-red-200 text-sm mt-1" id="template-view-subtitle">Selecione os itens para esta compra</p>
     </div>
     <div class="px-4 pt-4">
@@ -353,24 +353,24 @@
       <div id="template-filters" class="hidden mb-2">
         <div class="flex gap-2 overflow-x-auto pb-1">
           <button class="cat-chip" data-cat="" onclick="setTemplateFilter('')">Todos</button>
-          <button class="cat-chip" data-cat="semcat" onclick="setTemplateFilter('semcat')">📋 Sem cat.</button>
-          <button class="cat-chip" data-cat="carne" onclick="setTemplateFilter('carne')">🥩 Carne</button>
-          <button class="cat-chip" data-cat="laticinios" onclick="setTemplateFilter('laticinios')">🥛 Laticínios</button>
-          <button class="cat-chip" data-cat="doces" onclick="setTemplateFilter('doces')">🍬 Doces</button>
-          <button class="cat-chip" data-cat="bebidas" onclick="setTemplateFilter('bebidas')">🥤 Bebidas</button>
-          <button class="cat-chip" data-cat="limpeza" onclick="setTemplateFilter('limpeza')">🧹 Limpeza</button>
-          <button class="cat-chip" data-cat="outros" onclick="setTemplateFilter('outros')">📦 Outros</button>
+          <button class="cat-chip" data-cat="semcat" onclick="setTemplateFilter('semcat')">ðŸ“‹ Sem cat.</button>
+          <button class="cat-chip" data-cat="carne" onclick="setTemplateFilter('carne')">ðŸ¥© Carne</button>
+          <button class="cat-chip" data-cat="laticinios" onclick="setTemplateFilter('laticinios')">ðŸ¥› LaticÃ­nios</button>
+          <button class="cat-chip" data-cat="doces" onclick="setTemplateFilter('doces')">ðŸ¬ Doces</button>
+          <button class="cat-chip" data-cat="bebidas" onclick="setTemplateFilter('bebidas')">ðŸ¥¤ Bebidas</button>
+          <button class="cat-chip" data-cat="limpeza" onclick="setTemplateFilter('limpeza')">ðŸ§¹ Limpeza</button>
+          <button class="cat-chip" data-cat="outros" onclick="setTemplateFilter('outros')">ðŸ“¦ Outros</button>
         </div>
         <div class="flex gap-2 mt-2 pb-1">
-          <button id="sort-az"  onclick="setSortMode('az')"  class="cat-chip text-xs">A→Z</button>
-          <button id="sort-za"  onclick="setSortMode('za')"  class="cat-chip text-xs">Z→A</button>
+          <button id="sort-az"  onclick="setSortMode('az')"  class="cat-chip text-xs">Aâ†’Z</button>
+          <button id="sort-za"  onclick="setSortMode('za')"  class="cat-chip text-xs">Zâ†’A</button>
           <button id="sort-cat" onclick="setSortMode('cat')" class="cat-chip text-xs">Por categoria</button>
         </div>
       </div>
       <div id="template-container"></div>
       <div id="empty-template" class="text-center py-12 hidden">
-        <div class="text-5xl mb-3">📋</div>
-        <p class="text-gray-400 text-sm">Nenhum item na lista padrão.<br>Toque no <strong>+</strong> para adicionar.</p>
+        <div class="text-5xl mb-3">ðŸ“‹</div>
+        <p class="text-gray-400 text-sm">Nenhum item na lista padrÃ£o.<br>Toque no <strong>+</strong> para adicionar.</p>
       </div>
     </div>
     <div id="template-select-footer" class="hidden" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:28rem;padding:12px 16px 32px;background:white;border-top:1px solid #f3f4f6;z-index:40;">
@@ -379,7 +379,7 @@
         Selecionar tudo
       </button>
       <button class="btn-red" onclick="confirmTemplateSelect()" id="btn-confirm-template">
-        Adicionar 0 itens à lista
+        Adicionar 0 itens Ã  lista
       </button>
     </div>
     <button class="fab hidden" id="template-fab" onclick="openAddTemplateModal()">+</button>
@@ -391,21 +391,21 @@
       <div class="flex items-start justify-between mb-3">
         <div>
           <h2 class="text-2xl font-bold">Estoque</h2>
-          <p class="text-red-200 text-sm mt-1">Inventário da pizzaria</p>
+          <p class="text-red-200 text-sm mt-1">InventÃ¡rio da pizzaria</p>
         </div>
         <button onclick="openHelp()" class="text-red-300 hover:text-white flex-shrink-0">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
       </div>
       <div class="flex gap-2">
-        <button id="stock-sort-az"  onclick="setStockSort('az')"  class="cat-chip text-xs">A→Z</button>
+        <button id="stock-sort-az"  onclick="setStockSort('az')"  class="cat-chip text-xs">Aâ†’Z</button>
         <button id="stock-sort-cat" onclick="setStockSort('cat')" class="cat-chip text-xs">Por categoria</button>
       </div>
     </div>
     <div class="px-4 pt-4">
       <div id="stock-container"></div>
       <div id="empty-stock" class="text-center py-12 hidden">
-        <div class="text-5xl mb-3">📦</div>
+        <div class="text-5xl mb-3">ðŸ“¦</div>
         <p class="text-gray-400 text-sm">Toque no <strong>+</strong> para adicionar itens ao estoque</p>
       </div>
     </div>
@@ -415,13 +415,13 @@
   <!-- ===================== SETTINGS VIEW ===================== -->
   <div id="view-settings" class="view flex-1 pb-20 overflow-y-auto">
     <div class="bg-red-600 text-white px-5 pt-12 pb-6">
-      <h2 class="text-2xl font-bold">Configurações</h2>
+      <h2 class="text-2xl font-bold">ConfiguraÃ§Ãµes</h2>
     </div>
     <div class="px-5 pt-6">
       <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Alterar credenciais</h3>
       <div class="bg-white rounded-2xl p-4 shadow-sm mb-5">
         <div class="mb-4">
-          <label class="block text-sm font-semibold text-gray-600 mb-1">Novo usuário</label>
+          <label class="block text-sm font-semibold text-gray-600 mb-1">Novo usuÃ¡rio</label>
           <input type="text" id="settings-username" placeholder="Deixe em branco para manter" autocomplete="off" />
         </div>
         <div class="mb-5">
@@ -442,7 +442,7 @@
             </button>
           </div>
         </div>
-        <button class="btn-red" onclick="saveCredentials()">Salvar alterações</button>
+        <button class="btn-red" onclick="saveCredentials()">Salvar alteraÃ§Ãµes</button>
         <p class="text-center text-xs text-red-500 mt-2" id="settings-error"></p>
         <p class="text-center text-xs text-green-600 mt-2 hidden" id="settings-success">Salvo com sucesso!</p>
       </div>
@@ -456,7 +456,7 @@
       <div class="flex items-start justify-between">
         <div>
           <h2 class="text-2xl font-bold">Compra Avulsa</h2>
-          <p class="text-purple-200 text-sm mt-1">Registre uma compra rápida sem lista</p>
+          <p class="text-purple-200 text-sm mt-1">Registre uma compra rÃ¡pida sem lista</p>
         </div>
         <button onclick="openHelp()" class="text-purple-200 hover:text-white mt-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -468,7 +468,8 @@
         <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Nova compra avulsa</h3>
         <div class="mb-3">
           <label class="block text-sm font-semibold text-gray-600 mb-1">Produto</label>
-          <input type="text" id="avulsa-name" placeholder="Ex: Mozzarella" autocomplete="off" />
+          <input type="text" id="avulsa-name" list="avulsa-product-suggestions" placeholder="Ex: Mozzarella" autocomplete="off" />
+          <datalist id="avulsa-product-suggestions"></datalist>
         </div>
         <div class="grid grid-cols-2 gap-3 mb-3">
           <div>
@@ -485,19 +486,19 @@
               <option value="ml">ml</option>
               <option value="pct">pacote</option>
               <option value="cx">caixa</option>
-              <option value="dz">dúzia</option>
+              <option value="dz">dÃºzia</option>
               <option value="fardo">fardo</option>
             </select>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3 mb-4">
           <div>
-            <label class="block text-sm font-semibold text-gray-600 mb-1">Preço pago (R$)</label>
+            <label class="block text-sm font-semibold text-gray-600 mb-1">PreÃ§o pago (R$)</label>
             <input type="number" id="avulsa-price" placeholder="0,00" min="0" step="0.01" />
           </div>
           <div>
             <label class="block text-sm font-semibold text-gray-600 mb-1">Mercado</label>
-            <input type="text" id="avulsa-store" placeholder="Ex: Atacadão" autocomplete="off" />
+            <input type="text" id="avulsa-store" placeholder="Ex: AtacadÃ£o" autocomplete="off" />
           </div>
         </div>
         <button onclick="addAvulsa()" class="btn-purple">Registrar compra avulsa</button>
@@ -505,7 +506,7 @@
       <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Compras registradas</h3>
       <div id="avulsas-container"></div>
       <div id="empty-avulsas" class="text-center py-12 hidden">
-        <div class="text-5xl mb-3">🛍️</div>
+        <div class="text-5xl mb-3">ðŸ›ï¸</div>
         <p class="text-gray-400 text-sm">Nenhuma compra avulsa registrada ainda.</p>
       </div>
     </div>
@@ -517,13 +518,13 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
         <polyline points="9 22 9 12 15 12 15 22"/>
-      </svg>Início
+      </svg>InÃ­cio
     </button>
     <button class="nav-btn" id="nav-history" onclick="navigateTo('history')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="10"/>
         <polyline points="12 6 12 12 16 14"/>
-      </svg>Histórico
+      </svg>HistÃ³rico
     </button>
     <button class="nav-btn" id="nav-stock" onclick="navigateTo('stock')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -553,7 +554,7 @@
   <div id="modal-price" class="modal-overlay hidden">
     <div class="modal-sheet">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-bold" id="price-modal-title">—</h3>
+        <h3 class="text-lg font-bold" id="price-modal-title">â€”</h3>
         <button onclick="closeModal('modal-price')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
       </div>
       <div class="flex gap-2 mb-4">
@@ -570,12 +571,12 @@
         </div>
       </div>
       <div class="mb-5">
-        <label class="block text-sm font-semibold text-gray-600 mb-1">Preço total pago (R$)</label>
+        <label class="block text-sm font-semibold text-gray-600 mb-1">PreÃ§o total pago (R$)</label>
         <input type="number" id="price-input" placeholder="0,00" min="0" step="0.01" class="text-2xl font-bold text-center" />
       </div>
       <div class="flex gap-3">
         <button class="btn-outline" style="flex:1" onclick="closeModal('modal-price')">Cancelar</button>
-        <button class="btn-red" style="flex:2" onclick="confirmPrice()">Confirmar ✓</button>
+        <button class="btn-red" style="flex:2" onclick="confirmPrice()">Confirmar âœ“</button>
       </div>
     </div>
   </div>
@@ -584,9 +585,9 @@
   <div id="modal-finish" class="modal-overlay hidden">
     <div class="modal-sheet">
       <div class="text-center mb-4">
-        <div class="text-4xl mb-2">🎉</div>
+        <div class="text-4xl mb-2">ðŸŽ‰</div>
         <h3 class="text-xl font-bold text-gray-800 mb-1">Finalizar compra?</h3>
-        <p class="text-gray-400 text-sm" id="finish-summary">—</p>
+        <p class="text-gray-400 text-sm" id="finish-summary">â€”</p>
       </div>
       <div class="bg-gray-50 rounded-xl p-4 mb-4 text-center">
         <p class="text-gray-400 text-sm">Total da compra</p>
@@ -594,7 +595,7 @@
       </div>
       <div class="mb-5">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do mercado</label>
-        <input type="text" id="finish-store" placeholder="Ex: Atacadão, Assaí, BH..." autocomplete="off" />
+        <input type="text" id="finish-store" placeholder="Ex: AtacadÃ£o, AssaÃ­, BH..." autocomplete="off" />
       </div>
       <div class="flex gap-3">
         <button class="btn-outline" style="flex:1" onclick="closeModal('modal-finish')">Voltar</button>
@@ -607,7 +608,7 @@
   <div id="modal-clear-list" class="modal-overlay hidden">
     <div class="modal-sheet">
       <h3 class="text-lg font-bold mb-2">Apagar lista?</h3>
-      <p class="text-gray-400 text-sm mb-5">Todos os itens serão removidos. Essa ação não pode ser desfeita.</p>
+      <p class="text-gray-400 text-sm mb-5">Todos os itens serÃ£o removidos. Essa aÃ§Ã£o nÃ£o pode ser desfeita.</p>
       <div class="flex gap-3">
         <button class="btn-outline" style="flex:1" onclick="closeModal('modal-clear-list')">Cancelar</button>
         <button class="btn-red" style="flex:2;background:#ef4444" onclick="clearList()">Apagar tudo</button>
@@ -641,13 +642,13 @@
             <option value="ml">ml</option>
             <option value="pct">pacote</option>
             <option value="cx">caixa</option>
-            <option value="dz">dúzia</option>
+            <option value="dz">dÃºzia</option>
             <option value="fardo">fardo</option>
           </select>
         </div>
       </div>
       <div class="mb-5">
-        <label class="block text-sm font-semibold text-gray-600 mb-1">Quantidade mínima (alerta)</label>
+        <label class="block text-sm font-semibold text-gray-600 mb-1">Quantidade mÃ­nima (alerta)</label>
         <input type="number" id="stock-add-min" placeholder="0" min="0" step="0.01" />
       </div>
       <div class="mb-5">
@@ -655,7 +656,7 @@
         <select id="stock-add-category">
           <option value="">Sem categoria</option>
           <option value="carne">Carne</option>
-          <option value="laticinios">Laticínios</option>
+          <option value="laticinios">LaticÃ­nios</option>
           <option value="doces">Doces</option>
           <option value="bebidas">Bebidas</option>
           <option value="limpeza">Limpeza</option>
@@ -670,10 +671,10 @@
   <div id="modal-stock-item" class="modal-overlay hidden">
     <div class="modal-sheet">
       <div class="flex items-center justify-between mb-1">
-        <h3 class="text-lg font-bold" id="stock-item-modal-title">—</h3>
+        <h3 class="text-lg font-bold" id="stock-item-modal-title">â€”</h3>
         <button onclick="closeModal('modal-stock-item')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
       </div>
-      <p class="text-sm text-gray-400 mb-4" id="stock-item-modal-info">—</p>
+      <p class="text-sm text-gray-400 mb-4" id="stock-item-modal-info">â€”</p>
       <div class="bg-gray-50 rounded-xl p-4 mb-4">
         <p class="text-xs font-semibold text-gray-400 mb-2 uppercase">Ajustar quantidade</p>
         <div class="flex gap-3 mb-3">
@@ -683,7 +684,7 @@
           </button>
           <button id="stock-adj-saida" onclick="setStockAdjType('saida')"
             class="flex-1 py-2 rounded-xl text-sm font-bold border-2 border-gray-200 text-gray-400">
-            − Saída
+            âˆ’ SaÃ­da
           </button>
         </div>
         <input type="number" id="stock-adj-value" placeholder="0" min="0" step="0.01" class="mb-3" />
@@ -702,12 +703,12 @@
               <option value="ml">ml</option>
               <option value="pct">pacote</option>
               <option value="cx">caixa</option>
-              <option value="dz">dúzia</option>
+              <option value="dz">dÃºzia</option>
               <option value="fardo">fardo</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-gray-500 mb-1">Mínimo</label>
+            <label class="block text-xs font-semibold text-gray-500 mb-1">MÃ­nimo</label>
             <input type="number" id="stock-edit-min" placeholder="0" min="0" step="0.01" />
           </div>
         </div>
@@ -716,14 +717,14 @@
           <select id="stock-edit-category">
             <option value="">Sem categoria</option>
             <option value="carne">Carne</option>
-            <option value="laticinios">Laticínios</option>
+            <option value="laticinios">LaticÃ­nios</option>
             <option value="doces">Doces</option>
             <option value="bebidas">Bebidas</option>
             <option value="limpeza">Limpeza</option>
             <option value="outros">Outros</option>
           </select>
         </div>
-        <button class="btn-outline" style="font-size:14px;padding:10px" onclick="saveStockEdit()">Salvar edição</button>
+        <button class="btn-outline" style="font-size:14px;padding:10px" onclick="saveStockEdit()">Salvar ediÃ§Ã£o</button>
       </div>
       <button onclick="deleteStockItem()"
         class="w-full py-3 rounded-xl text-sm font-bold text-red-500 border-2 border-red-100">
@@ -736,7 +737,7 @@
   <div id="modal-add-template" class="modal-overlay hidden">
     <div class="modal-sheet">
       <div class="flex items-center justify-between mb-5">
-        <h3 class="text-lg font-bold">Adicionar à Lista Padrão</h3>
+        <h3 class="text-lg font-bold">Adicionar Ã  Lista PadrÃ£o</h3>
         <button onclick="closeModal('modal-add-template')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">&times;</button>
       </div>
       <div class="mb-4">
@@ -758,7 +759,7 @@
             <option value="ml">ml</option>
             <option value="pct">pacote</option>
             <option value="cx">caixa</option>
-            <option value="dz">dúzia</option>
+            <option value="dz">dÃºzia</option>
             <option value="fardo">fardo</option>
           </select>
         </div>
@@ -768,7 +769,7 @@
         <select id="tmpl-add-category">
           <option value="">Sem categoria</option>
           <option value="carne">Carne</option>
-          <option value="laticinios">Laticínios</option>
+          <option value="laticinios">LaticÃ­nios</option>
           <option value="doces">Doces</option>
           <option value="bebidas">Bebidas</option>
           <option value="limpeza">Limpeza</option>
@@ -805,7 +806,7 @@
             <option value="ml">ml</option>
             <option value="pct">pacote</option>
             <option value="cx">caixa</option>
-            <option value="dz">dúzia</option>
+            <option value="dz">dÃºzia</option>
             <option value="fardo">fardo</option>
           </select>
         </div>
@@ -815,7 +816,7 @@
         <select id="tmpl-edit-category">
           <option value="">Sem categoria</option>
           <option value="carne">Carne</option>
-          <option value="laticinios">Laticínios</option>
+          <option value="laticinios">LaticÃ­nios</option>
           <option value="doces">Doces</option>
           <option value="bebidas">Bebidas</option>
           <option value="limpeza">Limpeza</option>
@@ -831,11 +832,11 @@
     <div class="modal-sheet">
       <div class="flex items-center justify-between mb-5">
         <h3 class="text-lg font-bold">Editar Compra</h3>
-        <button onclick="closeModal('modal-edit-trip')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+        <button onclick="closeModal('modal-edit-trip')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">Ã—</button>
       </div>
       <div class="mb-4">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Nome do mercado</label>
-        <input type="text" id="edit-trip-store" placeholder="Ex: Atacadão, BH..." autocomplete="off" />
+        <input type="text" id="edit-trip-store" placeholder="Ex: AtacadÃ£o, BH..." autocomplete="off" />
       </div>
       <div class="mb-5">
         <label class="block text-sm font-semibold text-gray-600 mb-1">Data</label>
@@ -853,7 +854,7 @@
     <div class="modal-sheet" style="max-height:75vh;overflow-y:auto;padding-bottom:32px">
       <div class="flex items-center justify-between mb-5">
         <h3 class="text-lg font-bold" id="help-modal-title">Ajuda</h3>
-        <button onclick="closeModal('modal-help')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+        <button onclick="closeModal('modal-help')" class="text-gray-400 text-2xl leading-none w-8 h-8 flex items-center justify-center">Ã—</button>
       </div>
       <div id="help-modal-body"></div>
     </div>
@@ -902,7 +903,7 @@ async function doLogin() {
     document.getElementById('bottom-nav').style.display = 'flex';
     navigateTo('home');
   } catch {
-    errEl.textContent = 'Erro de conexão.';
+    errEl.textContent = 'Erro de conexÃ£o.';
   } finally { hideLoading(); }
 }
 
@@ -936,16 +937,18 @@ async function saveCredentials() {
     okEl.classList.remove('hidden');
     setTimeout(() => okEl.classList.add('hidden'), 3000);
   } catch {
-    errEl.textContent = 'Erro de conexão.';
+    errEl.textContent = 'Erro de conexÃ£o.';
   } finally { hideLoading(); }
 }
 
 // ===== STATE =====
 let activeList   = [];
 let trips        = [];
+let historyEntries = [];
 let analyticsMonth = new Date().toISOString().slice(0, 7);
 let priceItemId  = null;
 let currentView  = '';
+let currentTripType = 'trip';
 
 // ===== NAVIGATION =====
 function navigateTo(view) {
@@ -1063,7 +1066,7 @@ async function loadAnalytics() {
 function renderAnalytics(data) {
   document.getElementById('stat-trips').textContent = data.month_trips;
   document.getElementById('stat-total').textContent = fmtBRL(data.month_total);
-  document.getElementById('stat-avg').textContent   = data.month_trips > 0 ? fmtBRL(data.avg_ticket) : '—';
+  document.getElementById('stat-avg').textContent   = data.month_trips > 0 ? fmtBRL(data.avg_ticket) : 'â€”';
 
   const topEl   = document.getElementById('home-top-products');
   const topList = document.getElementById('home-top-list');
@@ -1093,42 +1096,79 @@ function renderAnalytics(data) {
 async function loadHistory() {
   showLoading();
   try {
-    const res = await authFetch('/api/trips');
-    if (!res) return;
-    trips = await res.json();
+    const [tripsRes, avulsasRes] = await Promise.all([
+      authFetch('/api/trips'),
+      authFetch('/api/avulsas')
+    ]);
+    if (!tripsRes || !avulsasRes) return;
+    trips = await tripsRes.json();
+    avulsasList = await avulsasRes.json();
+    historyEntries = [
+      ...trips.map(t => ({ ...t, type: 'trip', sort_date: t.finished_at })),
+      ...avulsasList.map(a => ({ ...a, type: 'avulsa', sort_date: a.purchased_at, grand_total: a.total_paid }))
+    ].sort((a, b) => new Date(b.sort_date) - new Date(a.sort_date));
     renderHistory();
   } catch { showError('Erro ao carregar histórico.'); } finally { hideLoading(); }
 }
 
 function renderHistory() {
   const emptyEl = document.getElementById('empty-history');
-  if (trips.length === 0) {
+  if (historyEntries.length === 0) {
     emptyEl.classList.remove('hidden');
     document.getElementById('history-list').innerHTML = '';
     return;
   }
   emptyEl.classList.add('hidden');
-  document.getElementById('history-list').innerHTML = trips.map(t => `
-    <div class="trip-card anim" onclick="openTrip('${t.id}')">
-      ${tripCardHTML(t)}
+  document.getElementById('history-list').innerHTML = historyEntries.map(entry => `
+    <div class="trip-card anim ${entry.type === 'avulsa' ? 'border border-purple-200 bg-purple-50/40' : 'border border-red-100'}" onclick="openHistoryEntry('${entry.type}','${entry.id}')">
+      ${tripCardHTML(entry)}
     </div>
   `).join('');
 }
 
 function tripCardHTML(t) {
-  const d = new Date(t.finished_at);
+  const d = new Date(t.type === 'avulsa' ? t.purchased_at : t.finished_at);
   const dateStr = d.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' });
   const storePart = t.store_name ? ` · ${esc(t.store_name)}` : '';
+  const typeTag = t.type === 'avulsa'
+    ? '<span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 mb-1">Avulsa</span>'
+    : '<span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 mb-1">Lista padrão</span>';
+  const totalColor = t.type === 'avulsa' ? 'text-purple-600' : 'text-red-600';
   return `
     <div class="flex items-center justify-between">
       <div>
+        ${typeTag}
         <p class="font-semibold text-gray-800">${dateStr}${storePart}</p>
-        <p class="text-xs text-gray-400 mt-0.5">${fmtBRL(t.grand_total)}</p>
+        <p class="text-xs mt-0.5 ${totalColor}">${fmtBRL(t.grand_total)}</p>
       </div>
       <svg class="w-5 h-5 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M9 18l6-6-6-6"/>
       </svg>
     </div>`;
+}
+
+function setTripDetailTheme(type) {
+  const header = document.querySelector('#view-trip > div');
+  const totalCard = document.getElementById('trip-detail-total')?.parentElement;
+  const editBtn = document.getElementById('trip-edit-btn');
+  const deleteBtn = document.getElementById('trip-delete-btn');
+  if (!header || !totalCard) return;
+  if (type === 'avulsa') {
+    header.style.background = 'linear-gradient(135deg,#7c3aed,#6d28d9)';
+    totalCard.style.background = 'linear-gradient(135deg,#7c3aed,#6d28d9)';
+    if (editBtn) editBtn.classList.add('hidden');
+    if (deleteBtn) deleteBtn.classList.add('hidden');
+  } else {
+    header.style.background = '';
+    totalCard.style.background = 'linear-gradient(135deg,#dc2626,#b91c1c)';
+    if (editBtn) editBtn.classList.remove('hidden');
+    if (deleteBtn) deleteBtn.classList.remove('hidden');
+  }
+}
+
+async function openHistoryEntry(type, id) {
+  if (type === 'avulsa') return openAvulsaInDetail(id);
+  return openTrip(id);
 }
 
 async function openTrip(id) {
@@ -1140,7 +1180,9 @@ async function openTrip(id) {
     hideLoading();
 
     currentTripId   = id;
+    currentTripType = 'trip';
     currentTripData = trip;
+    setTripDetailTheme('trip');
 
     const d = new Date(trip.finished_at);
     document.getElementById('trip-detail-date').textContent  =
@@ -1152,7 +1194,7 @@ async function openTrip(id) {
       <div class="bg-white rounded-xl p-4 mb-2 shadow-sm flex items-center justify-between">
         <div>
           <p class="font-semibold text-gray-800">${esc(i.name)}</p>
-          <p class="text-xs text-gray-400">${i.qty} ${i.unit}</p>
+          <p class="text-xs text-gray-400">${i.qty} ${i.unit}${unitPriceText(i.total_paid, i.qty)}</p>
         </div>
         <p class="text-lg font-bold text-gray-700">${fmtBRL(i.total_paid)}</p>
       </div>
@@ -1162,7 +1204,32 @@ async function openTrip(id) {
   } catch { hideLoading(); showError('Erro ao carregar compra.'); }
 }
 
+function openAvulsaInDetail(id) {
+  const avulsa = avulsasList.find(a => a.id === id);
+  if (!avulsa) return;
+  currentTripId = id;
+  currentTripType = 'avulsa';
+  currentTripData = avulsa;
+  setTripDetailTheme('avulsa');
+  const d = new Date(avulsa.purchased_at);
+  document.getElementById('trip-detail-date').textContent =
+    d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('trip-detail-count').textContent = '1 item (compra avulsa)';
+  document.getElementById('trip-detail-total').textContent = fmtBRL(avulsa.total_paid);
+  document.getElementById('trip-detail-store').textContent = avulsa.store_name || '';
+  document.getElementById('trip-detail-items').innerHTML = `
+    <div class="bg-white rounded-xl p-4 mb-2 shadow-sm flex items-center justify-between border border-purple-100">
+      <div>
+        <p class="font-semibold text-gray-800">${esc(avulsa.name)}</p>
+        <p class="text-xs text-gray-400">${avulsa.qty} ${avulsa.unit}${unitPriceText(avulsa.total_paid, avulsa.qty)}</p>
+      </div>
+      <p class="text-lg font-bold text-purple-700">${fmtBRL(avulsa.total_paid)}</p>
+    </div>`;
+  navigateTo('trip');
+}
+
 function openEditTripModal() {
+  if (currentTripType !== 'trip') return;
   if (!currentTripData) return;
   document.getElementById('edit-trip-store').value = currentTripData.store_name || '';
   const d = new Date(currentTripData.finished_at);
@@ -1171,6 +1238,7 @@ function openEditTripModal() {
 }
 
 async function saveEditTrip() {
+  if (currentTripType !== 'trip') return;
   const store_name  = document.getElementById('edit-trip-store').value.trim();
   const finished_at = document.getElementById('edit-trip-date').value;
   if (!finished_at) { document.getElementById('edit-trip-date').focus(); return; }
@@ -1195,6 +1263,7 @@ async function saveEditTrip() {
 }
 
 async function confirmDeleteTrip() {
+  if (currentTripType !== 'trip') return;
   if (!confirm('Excluir esta compra permanentemente?')) return;
   showLoading();
   try {
@@ -1204,7 +1273,6 @@ async function confirmDeleteTrip() {
     navigateTo('history');
   } catch { showError('Erro ao excluir.'); } finally { hideLoading(); }
 }
-
 // ===== MODAL HELPERS =====
 function openModal(id)  { document.getElementById(id).classList.remove('hidden'); }
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
@@ -1237,7 +1305,7 @@ function renderList() {
   const n       = activeList.length;
   const pct     = n ? Math.round((checked / n) * 100) : 0;
   document.getElementById('list-total').textContent         = fmtBRL(total);
-  document.getElementById('list-checked-count').textContent = checked + ' ✓';
+  document.getElementById('list-checked-count').textContent = checked + ' âœ“';
   document.getElementById('list-progress').style.width      = pct + '%';
   document.getElementById('list-progress-text').textContent = `${checked}/${n}`;
   document.getElementById('empty-list').classList.toggle('hidden', n > 0);
@@ -1247,11 +1315,11 @@ function renderList() {
 
 function itemRowHTML(item) {
   const icon  = item.checked
-    ? `<div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">✓</div>`
-    : `<div class="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center text-red-300 text-lg">○</div>`;
+    ? `<div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">âœ“</div>`
+    : `<div class="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center text-red-300 text-lg">â—‹</div>`;
   const price = item.checked
     ? `<span class="text-green-600 font-bold text-sm">${fmtBRL(item.total_paid)}</span>`
-    : `<span class="text-gray-300 text-sm">—</span>`;
+    : `<span class="text-gray-300 text-sm">â€”</span>`;
   return `
     <div class="item-row ${item.checked ? 'checked' : ''}" onclick="openPriceModal('${item.id}')">
       <div class="flex items-center gap-3">
@@ -1262,7 +1330,7 @@ function itemRowHTML(item) {
         </div>
         <div class="text-right mr-1">${price}</div>
         <button onclick="event.stopPropagation();deleteItem('${item.id}')"
-          class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+          class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">Ã—</button>
       </div>
     </div>`;
 }
@@ -1296,7 +1364,7 @@ async function confirmPrice() {
     const idx = activeList.findIndex(i => i.id === priceItemId);
     if (idx !== -1) activeList[idx] = updated;
     renderList();
-  } catch { showError('Erro ao salvar preço.'); } finally { hideLoading(); }
+  } catch { showError('Erro ao salvar preÃ§o.'); } finally { hideLoading(); }
 }
 
 async function deleteItem(id) {
@@ -1355,20 +1423,20 @@ async function finishTrip() {
   }
 }
 
-// ===== AUTO-CATEGORIZAÇÃO =====
+// ===== AUTO-CATEGORIZAÃ‡ÃƒO =====
 const CAT_KEYWORDS = {
-  carne:      ['carne','frango','peito','coxa','asa','peixe','atum','salmão','bacon','presunto','salame','pepperoni','linguiça','calabresa','hamburguer','costela','picanha','alcatra','filé','bife','patinho','músculo','pernil','lombo','bisteca','contrafilé','cupim'],
-  laticinios: ['queijo','mozzarella','muçarela','requeijão','manteiga','margarina','leite','nata','creme de leite','iogurte','parmesão','ricota','catupiry','cream cheese','provolone','coalho','gorgonzola','brie','gouda','prato','cheddar'],
-  doces:      ['açúcar','chocolate','doce','nutella','baunilha','sorvete','mousse','geleia','mel','calda','brigadeiro','achocolatado','leite condensado','confeiteiro','granulado','cobertura'],
-  bebidas:    ['água','suco','refrigerante','cerveja','vinho','coca','sprite','guaraná','energético','café','chá','bebida','vodka','whisky','rum','pinga','cachaça','isotônico','leite de coco'],
-  limpeza:    ['detergente','sabão','esponja','vassoura','rodo','pano','papel toalha','desinfetante','álcool','cloro','limpador','desengordurante','sanitizante','luva','saco de lixo','multiuso','amaciante','sabonete','sabão em pó','higienizante'],
+  carne:      ['carne','frango','peito','coxa','asa','peixe','atum','salmÃ£o','bacon','presunto','salame','pepperoni','linguiÃ§a','calabresa','hamburguer','costela','picanha','alcatra','filÃ©','bife','patinho','mÃºsculo','pernil','lombo','bisteca','contrafilÃ©','cupim'],
+  laticinios: ['queijo','mozzarella','muÃ§arela','requeijÃ£o','manteiga','margarina','leite','nata','creme de leite','iogurte','parmesÃ£o','ricota','catupiry','cream cheese','provolone','coalho','gorgonzola','brie','gouda','prato','cheddar'],
+  doces:      ['aÃ§Ãºcar','chocolate','doce','nutella','baunilha','sorvete','mousse','geleia','mel','calda','brigadeiro','achocolatado','leite condensado','confeiteiro','granulado','cobertura'],
+  bebidas:    ['Ã¡gua','suco','refrigerante','cerveja','vinho','coca','sprite','guaranÃ¡','energÃ©tico','cafÃ©','chÃ¡','bebida','vodka','whisky','rum','pinga','cachaÃ§a','isotÃ´nico','leite de coco'],
+  limpeza:    ['detergente','sabÃ£o','esponja','vassoura','rodo','pano','papel toalha','desinfetante','Ã¡lcool','cloro','limpador','desengordurante','sanitizante','luva','saco de lixo','multiuso','amaciante','sabonete','sabÃ£o em pÃ³','higienizante'],
 };
 
 function guessCategoryFromName(name) {
-  const lower = name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const lower = name.toLowerCase().normalize('NFD').replace(/[Ì€-Í¯]/g, '');
   for (const [cat, keywords] of Object.entries(CAT_KEYWORDS)) {
     for (const kw of keywords) {
-      const kwNorm = kw.normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const kwNorm = kw.normalize('NFD').replace(/[Ì€-Í¯]/g, '');
       if (lower.includes(kwNorm)) return cat;
     }
   }
@@ -1412,15 +1480,19 @@ const CAT_CHIP_INACTIVE = {
 async function loadTemplate() {
   showLoading();
   try {
-    const res = await authFetch('/api/template');
-    if (!res) return;
-    templateList    = await res.json();
+    const [templateRes, stockRes] = await Promise.all([
+      authFetch('/api/template'),
+      authFetch('/api/stock')
+    ]);
+    if (!templateRes || !stockRes) return;
+    templateList    = await templateRes.json();
+    stockList       = await stockRes.json();
     templateChecked = new Set(templateList.map(i => i.id));
     templateEditMode = false;
     templateCategoryFilter = '';
     templateSortMode = 'az';
     renderTemplate();
-  } catch { showError('Erro ao carregar lista padrão.'); } finally { hideLoading(); }
+  } catch { showError('Erro ao carregar lista padrÃ£o.'); } finally { hideLoading(); }
 }
 
 function renderTemplate() {
@@ -1439,14 +1511,14 @@ function renderTemplate() {
     fab.classList.remove('hidden');
     filtersEl.classList.add('hidden');
     editBtn.textContent  = 'Concluir';
-    title.textContent    = 'Editar Lista Padrão';
+    title.textContent    = 'Editar Lista PadrÃ£o';
     subtitle.textContent = 'Adicione, edite ou remova itens';
   } else {
     footer.classList.toggle('hidden', templateList.length === 0);
     fab.classList.add('hidden');
     filtersEl.classList.toggle('hidden', templateList.length === 0);
     editBtn.textContent  = 'Editar lista';
-    title.textContent    = 'Lista Padrão';
+    title.textContent    = 'Lista PadrÃ£o';
     subtitle.textContent = 'Selecione os itens para esta compra';
     document.querySelectorAll('#template-filters .cat-chip[data-cat]').forEach(btn => {
       const chipCat = btn.dataset.cat;
@@ -1481,11 +1553,11 @@ function renderTemplate() {
     else visibleItems.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
   }
 
-  const CAT_LABEL = { carne: 'Carne', laticinios: 'Laticínios', doces: 'Doces', bebidas: 'Bebidas', limpeza: 'Limpeza', outros: 'Outros' };
+  const CAT_LABEL = { carne: 'Carne', laticinios: 'LaticÃ­nios', doces: 'Doces', bebidas: 'Bebidas', limpeza: 'Limpeza', outros: 'Outros' };
 
   if (!templateEditMode && visibleItems.length === 0 && templateList.length > 0) {
     document.getElementById('template-container').innerHTML = `
-      <div class="text-center py-10"><div class="text-4xl mb-3">🔍</div>
+      <div class="text-center py-10"><div class="text-4xl mb-3">ðŸ”</div>
       <p class="text-gray-500 text-sm">Nenhum item nesta categoria.</p></div>`;
     return;
   }
@@ -1497,21 +1569,23 @@ function renderTemplate() {
         <div class="item-row ${item.category ? 'cat-' + item.category : ''} flex items-center gap-3" onclick="openEditTemplateModal('${item.id}')">
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
-            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' · ' + label : ''}</p>
+            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' Â· ' + label : ''}</p>
           </div>
           <button onclick="event.stopPropagation();deleteTemplateItem('${item.id}')"
-            class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+            class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">Ã—</button>
         </div>`;
     }
     const checked = templateChecked.has(item.id);
+    const stockMatch = stockList.find(s => s.name.toLowerCase() === item.name.toLowerCase());
+    const stockInfo = stockMatch ? ` Â· Estoque: ${stockMatch.qty} ${stockMatch.unit}` : ' Â· Estoque: nÃ£o cadastrado';
     return `
       <div class="item-row ${checked ? 'checked' : (item.category ? 'cat-' + item.category : '')}" onclick="toggleTemplateItem('${item.id}')">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0
-            ${checked ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-300'}">${checked ? '✓' : '○'}</div>
+            ${checked ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-300'}">${checked ? 'âœ“' : 'â—‹'}</div>
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-gray-800 truncate">${esc(item.name)}</p>
-            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' · ' + label : ''}</p>
+            <p class="text-xs text-gray-400">${item.qty} ${item.unit}${label ? ' Â· ' + label : ''}${stockInfo}</p>
           </div>
         </div>
       </div>`;
@@ -1526,7 +1600,7 @@ function toggleTemplateItem(id) {
 function updateTemplateFooterCount() {
   const count = templateChecked.size;
   document.getElementById('btn-confirm-template').textContent =
-    `Adicionar ${count} ite${count !== 1 ? 'ns' : 'm'} à lista`;
+    `Adicionar ${count} ite${count !== 1 ? 'ns' : 'm'} Ã  lista`;
 }
 
 function toggleSelectAll() {
@@ -1564,7 +1638,7 @@ async function confirmTemplateSelect() {
       });
     }
     navigateTo('list');
-  } catch { showError('Erro ao adicionar itens à lista.'); } finally { hideLoading(); }
+  } catch { showError('Erro ao adicionar itens Ã  lista.'); } finally { hideLoading(); }
 }
 
 function setTemplateFilter(cat) {
@@ -1707,9 +1781,9 @@ function renderStock() {
         <div class="flex items-center gap-3">
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-gray-800 truncate">${esc(s.name)}</p>
-            <p class="text-xs text-gray-400">${s.qty} ${s.unit}${low ? ' · <span class="text-orange-500 font-medium">abaixo do mínimo (' + s.min_qty + ')</span>' : ''}</p>
+            <p class="text-xs text-gray-400">${s.qty} ${s.unit}${low ? ' Â· <span class="text-orange-500 font-medium">abaixo do mÃ­nimo (' + s.min_qty + ')</span>' : ''}</p>
           </div>
-          ${low ? '<span class="text-orange-400 text-lg">⚠️</span>' : ''}
+          ${low ? '<span class="text-orange-400 text-lg">âš ï¸</span>' : ''}
         </div>
       </div>`;
   }).join('');
@@ -1753,7 +1827,7 @@ function openStockItemModal(id) {
   stockAdjType = 'entrada';
   document.getElementById('stock-item-modal-title').textContent = item.name;
   document.getElementById('stock-item-modal-info').textContent  =
-    `Estoque atual: ${item.qty} ${item.unit} · Mínimo: ${item.min_qty}`;
+    `Estoque atual: ${item.qty} ${item.unit} Â· MÃ­nimo: ${item.min_qty}`;
   document.getElementById('stock-adj-value').value  = '';
   document.getElementById('stock-edit-unit').value  = item.unit;
   document.getElementById('stock-edit-min').value   = item.min_qty;
@@ -1838,8 +1912,28 @@ async function loadAvulsas() {
     const res = await authFetch('/api/avulsas');
     if (!res) return;
     avulsasList = await res.json();
+    await refreshAvulsaSuggestions();
     renderAvulsas();
   } catch { showError('Erro ao carregar compras avulsas.'); } finally { hideLoading(); }
+}
+
+async function refreshAvulsaSuggestions() {
+  if (templateList.length === 0) {
+    const res = await authFetch('/api/template');
+    if (res) templateList = await res.json();
+  }
+  if (stockList.length === 0) {
+    const res = await authFetch('/api/stock');
+    if (res) stockList = await res.json();
+  }
+  const suggestionSet = new Set([
+    ...templateList.map(i => i.name),
+    ...stockList.map(s => s.name),
+    ...avulsasList.map(a => a.name)
+  ].filter(Boolean));
+  const sorted = [...suggestionSet].sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
+  document.getElementById('avulsa-product-suggestions').innerHTML =
+    sorted.map(name => `<option value="${esc(name)}"></option>`).join('');
 }
 
 function renderAvulsas() {
@@ -1849,7 +1943,7 @@ function renderAvulsas() {
   container.innerHTML = avulsasList.map(a => {
     const d = new Date(a.purchased_at);
     const dateStr = d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' });
-    const meta = [a.qty + ' ' + a.unit, a.store_name, dateStr].filter(Boolean).join(' · ');
+    const meta = [a.qty + ' ' + a.unit + unitPriceText(a.total_paid, a.qty), a.store_name, dateStr].filter(Boolean).join(' Â· ');
     return `
       <div class="item-row">
         <div class="flex items-center gap-3">
@@ -1861,7 +1955,7 @@ function renderAvulsas() {
             <p class="font-bold text-sm" style="color:#7c3aed">${fmtBRL(a.total_paid)}</p>
           </div>
           <button onclick="deleteAvulsa('${a.id}')"
-            class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">×</button>
+            class="text-gray-300 text-2xl leading-none w-8 h-8 flex items-center justify-center">Ã—</button>
         </div>
       </div>`;
   }).join('');
@@ -1884,6 +1978,7 @@ async function addAvulsa() {
     if (!res) return;
     const item = await res.json();
     avulsasList.unshift(item);
+    await refreshAvulsaSuggestions();
     document.getElementById('avulsa-name').value  = '';
     document.getElementById('avulsa-qty').value   = '1';
     document.getElementById('avulsa-unit').value  = 'un';
@@ -1906,43 +2001,43 @@ async function deleteAvulsa(id) {
 
 // ===== HELP =====
 const HELP_CONTENT = {
-  home: { title: 'Início — Como usar', items: [
-    { h: 'Seletor de mês', t: 'Use as setas ← → para ver os gastos de cada mês.' },
-    { h: 'Cards de estatística', t: 'Mostram total gasto, número de idas e ticket médio do mês selecionado.' },
-    { h: 'Top produtos', t: 'Os 5 produtos com maior gasto no mês, com barra proporcional ao valor.' },
-    { h: 'Estoque crítico', t: 'Aparece quando algum produto está abaixo do nível mínimo cadastrado.' },
+  home: { title: 'InÃ­cio â€” Como usar', items: [
+    { h: 'Seletor de mÃªs', t: 'Use as setas â† â†’ para ver os gastos de cada mÃªs.' },
+    { h: 'Cards de estatÃ­stica', t: 'Mostram total gasto, nÃºmero de idas e ticket mÃ©dio do mÃªs selecionado.' },
+    { h: 'Top produtos', t: 'Os 5 produtos com maior gasto no mÃªs, com barra proporcional ao valor.' },
+    { h: 'Estoque crÃ­tico', t: 'Aparece quando algum produto estÃ¡ abaixo do nÃ­vel mÃ­nimo cadastrado.' },
     { h: 'Lista ativa', t: 'Atalho para continuar uma lista de compras em andamento.' },
   ]},
-  list: { title: 'Lista de Compras — Como usar', items: [
+  list: { title: 'Lista de Compras â€” Como usar', items: [
     { h: 'Adicionar item (+)', t: 'Toque no + para adicionar um produto. Informe nome, quantidade e unidade.' },
-    { h: 'Marcar como comprado', t: 'Toque no item para informar o preço pago. Fica verde ao ser marcado.' },
-    { h: 'Finalizar ✓', t: 'Salva a compra. Informe o nome do mercado antes de confirmar.' },
-    { h: 'Remover item', t: 'Toque no × para remover o item da lista atual.' },
+    { h: 'Marcar como comprado', t: 'Toque no item para informar o preÃ§o pago. Fica verde ao ser marcado.' },
+    { h: 'Finalizar âœ“', t: 'Salva a compra. Informe o nome do mercado antes de confirmar.' },
+    { h: 'Remover item', t: 'Toque no Ã— para remover o item da lista atual.' },
   ]},
-  template: { title: 'Lista Padrão — Como usar', items: [
-    { h: 'Selecionar itens', t: 'Toque nos itens para marcá-los. Use "Selecionar tudo" para marcar todos de uma vez.' },
-    { h: 'Filtrar por categoria', t: 'Toque nos chips (Carne, Laticínios, etc.) para ver só itens daquela categoria.' },
-    { h: 'Adicionar à lista', t: 'Após selecionar, toque em "Adicionar N itens à lista" para enviá-los à lista de compras.' },
-    { h: 'Editar lista', t: 'Toque em "Editar lista" para adicionar, editar ou remover itens da lista padrão.' },
+  template: { title: 'Lista PadrÃ£o â€” Como usar', items: [
+    { h: 'Selecionar itens', t: 'Toque nos itens para marcÃ¡-los. Use "Selecionar tudo" para marcar todos de uma vez.' },
+    { h: 'Filtrar por categoria', t: 'Toque nos chips (Carne, LaticÃ­nios, etc.) para ver sÃ³ itens daquela categoria.' },
+    { h: 'Adicionar Ã  lista', t: 'ApÃ³s selecionar, toque em "Adicionar N itens Ã  lista" para enviÃ¡-los Ã  lista de compras.' },
+    { h: 'Editar lista', t: 'Toque em "Editar lista" para adicionar, editar ou remover itens da lista padrÃ£o.' },
   ]},
-  history: { title: 'Histórico — Como usar', items: [
+  history: { title: 'HistÃ³rico â€” Como usar', items: [
     { h: 'Ver detalhes', t: 'Toque em qualquer compra para ver os itens e o total gasto.' },
     { h: 'Editar compra', t: 'No detalhe, toque em Editar para corrigir o mercado ou a data.' },
     { h: 'Excluir compra', t: 'No detalhe, toque em Excluir para remover a compra permanentemente.' },
   ]},
-  stock: { title: 'Estoque — Como usar', items: [
-    { h: 'Adicionar produto (+)', t: 'Cadastre um produto com quantidade inicial e nível mínimo de alerta.' },
-    { h: 'Ajustar quantidade', t: 'Toque no produto para registrar entrada (compra) ou saída (uso).' },
-    { h: 'Nível mínimo', t: 'Quando a quantidade cai abaixo do mínimo, o produto aparece com ⚠️ e no alerta da tela inicial.' },
-    { h: 'Atualização automática', t: 'Ao finalizar uma compra, os itens da lista atualizam o estoque automaticamente.' },
+  stock: { title: 'Estoque â€” Como usar', items: [
+    { h: 'Adicionar produto (+)', t: 'Cadastre um produto com quantidade inicial e nÃ­vel mÃ­nimo de alerta.' },
+    { h: 'Ajustar quantidade', t: 'Toque no produto para registrar entrada (compra) ou saÃ­da (uso).' },
+    { h: 'NÃ­vel mÃ­nimo', t: 'Quando a quantidade cai abaixo do mÃ­nimo, o produto aparece com âš ï¸ e no alerta da tela inicial.' },
+    { h: 'AtualizaÃ§Ã£o automÃ¡tica', t: 'Ao finalizar uma compra, os itens da lista atualizam o estoque automaticamente.' },
   ]},
-  avulsas: { title: 'Compra Avulsa — Como usar', items: [
-    { h: 'Para que serve', t: 'Registre uma compra simples sem precisar criar uma lista. Ideal para urgências.' },
-    { h: 'Como registrar', t: 'Preencha o produto, quantidade, unidade, preço pago e mercado. Toque em Registrar.' },
-    { h: 'Histórico', t: 'As compras avulsas ficam listadas abaixo do formulário, da mais recente à mais antiga.' },
+  avulsas: { title: 'Compra Avulsa â€” Como usar', items: [
+    { h: 'Para que serve', t: 'Registre uma compra simples sem precisar criar uma lista. Ideal para urgÃªncias.' },
+    { h: 'Como registrar', t: 'Preencha o produto, quantidade, unidade, preÃ§o pago e mercado. Toque em Registrar.' },
+    { h: 'HistÃ³rico', t: 'As compras avulsas ficam listadas abaixo do formulÃ¡rio, da mais recente Ã  mais antiga.' },
   ]},
-  settings: { title: 'Configurações — Como usar', items: [
-    { h: 'Alterar credenciais', t: 'Informe o novo usuário e/ou senha e toque em Salvar. Deixe em branco para manter o atual.' },
+  settings: { title: 'ConfiguraÃ§Ãµes â€” Como usar', items: [
+    { h: 'Alterar credenciais', t: 'Informe o novo usuÃ¡rio e/ou senha e toque em Salvar. Deixe em branco para manter o atual.' },
     { h: 'Sair da conta', t: 'Toque em "Sair da conta" para fazer logout.' },
   ]},
 };
@@ -1962,6 +2057,12 @@ function openHelp() {
 // ===== UTILS =====
 function fmtBRL(val) {
   return (val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+function unitPriceText(total, qty) {
+  const q = Number(qty || 0);
+  const t = Number(total || 0);
+  if (!Number.isFinite(q) || q <= 1) return '';
+  return ` Â· ${fmtBRL(t / q)}/un`;
 }
 function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

@@ -1433,10 +1433,10 @@ const CAT_KEYWORDS = {
 };
 
 function guessCategoryFromName(name) {
-  const lower = name.toLowerCase().normalize('NFD').replace(/[Ì€-Í¯]/g, '');
+  const lower = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   for (const [cat, keywords] of Object.entries(CAT_KEYWORDS)) {
     for (const kw of keywords) {
-      const kwNorm = kw.normalize('NFD').replace(/[Ì€-Í¯]/g, '');
+      const kwNorm = kw.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       if (lower.includes(kwNorm)) return cat;
     }
   }

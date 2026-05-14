@@ -3,7 +3,16 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 
-const DB_PATH = process.env.DB_PATH || (() => {
+const DB_PATH = (() => {
+  if (process.env.DB_PATH) return process.env.DB_PATH;
+
+  // Railway volume mount path is exposed at runtime when a volume is attached.
+  if (process.env.RAILWAY_VOLUME_MOUNT_PATH) {
+    const dir = process.env.RAILWAY_VOLUME_MOUNT_PATH;
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    return path.join(dir, 'pizzaria.db');
+  }
+
   const dir = path.join(__dirname, 'data');
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   return path.join(dir, 'pizzaria.db');
